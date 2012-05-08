@@ -43,6 +43,7 @@ public class ArenaManager {
         this.world = w;
         if (w == null) {
             System.out.println("[HeroMatchMaking] invalid world name in config");
+            Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("HeroMatchMaking"));
             return;
         }
     }

@@ -5,11 +5,9 @@ package redcastlemedia.multitallented.bukkit.heromatchmaking.managers;
  * @author Multitallented
  */
 import java.io.File;
-import java.io.IOException;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.PluginManager;
@@ -98,7 +96,9 @@ public class InitManager implements Manager {
                 JavaPlugin plugin = (JavaPlugin) Controller.getInstance("plugin");
                 File file = new File(plugin.getDataFolder(), "config.yml");
                 File folder = new File(plugin.getDataFolder() + "");
-                folder.mkdirs();
+                if (!folder.exists()) {
+                  folder.mkdirs();
+                }
                 config.createIfNotExists(file);
                 Controller.addInstance("config", config);
                 

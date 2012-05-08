@@ -16,6 +16,11 @@ public abstract class YMLProxy extends YamlConfiguration {
     
     public boolean createIfNotExists(File file) {
         if (file.exists()) {
+            try {
+                this.load(file);
+            } catch (Exception e) {
+              
+            }
             return true;
         }
         try {
