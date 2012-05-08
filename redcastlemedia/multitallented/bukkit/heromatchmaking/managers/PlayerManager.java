@@ -43,6 +43,8 @@ public class PlayerManager {
     
     public HashSet<Player> checkStartMatch() {
         //TODO make matchmaking code here
+        //check Heroes level range in config
+        //check previous record and range in config
         if (queuingPlayers.size() > 1) {
             HashSet<Player> tempSet = new HashSet<Player>();
             int i = 0;

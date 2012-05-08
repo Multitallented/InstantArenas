@@ -9,6 +9,7 @@ import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.classes.HeroClass;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -38,13 +39,16 @@ public class ArenaManager {
     public ArenaManager() {
         YMLProxy config = (YMLProxy) Controller.getInstance("config");
         String worldName = config.getString("world", "world");
-        System.out.println(worldName);
         World w = Bukkit.getWorld(worldName);
         this.world = w;
+        Logger log = Bukkit.getLogger();
         if (w == null) {
-            System.out.println("[HeroMatchMaking] invalid world name in config");
+            log.warning("[HeroMatchMaking] invalid world name in config.");
             Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("HeroMatchMaking"));
             return;
+        } else {
+          log.info("[HeroMatchMaking] Using " + worldName + " for instanced matches.");
+          log.warning("[HeroMatchMaking] Make sure there is nothing valuable in " + worldName);
         }
     }
     

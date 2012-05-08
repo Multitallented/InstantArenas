@@ -5,6 +5,7 @@
 package redcastlemedia.multitallented.bukkit.heromatchmaking.commands;
 
 import java.util.HashSet;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -34,18 +35,18 @@ public class QueueCommand implements HCommand {
                 PlayerManager pm = (PlayerManager) Controller.getInstance("playermanager");
                 Player p = (Player) cs;
                 
+                //Perform a permission check to see if they can queue
+                if (!((Permission) Controller.getInstance("perm")).has(p, "heromatchmaking.queue")) {
+                    p.sendMessage(ChatColor.GRAY + "[HeroMatchMaking] You don't have permission to queue");
+                    return;
+                }
+                
                 if (!pm.containsQueuingPlayer(p)) {
                     pm.addQueuingPlayer(p);
                 }
                 
-                HashSet<Player> readyPlayers = null;
-                do {
-                    readyPlayers = pm.checkStartMatch();
-                    
-                    for (Player p0 : readyPlayers) {
-                        pm.removeQueuingPlayer(p0);
-                        //TODO player get settings from player manager
-                    }
+                HashSet<Player> readyPlayers = pm.checkStartMatch();
+                while (readyPlayers != null) {
 
                     //TODO change this to be dynamic later
                     RTSArenaBuilder arena = new RTSArenaBuilder();
@@ -53,10 +54,11 @@ public class QueueCommand implements HCommand {
                     ArenaManager am = (ArenaManager) Controller.getInstance("arenamanager");
                     am.scheduleMatch(readyPlayers, arena);
                     for (Player p0 : readyPlayers) {
+                        pm.removeQueuingPlayer(p0);
                         pm.putPlayerLocation(p0, arena);
                     }
                     
-                } while (readyPlayers != null);
+                }
                 
             }
             
