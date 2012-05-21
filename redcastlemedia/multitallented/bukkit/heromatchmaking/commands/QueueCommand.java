@@ -44,6 +44,10 @@ public class QueueCommand implements HCommand {
                 
                 if (!pm.containsQueuingPlayer(p)) {
                     pm.addQueuingPlayer(p);
+                } else {
+                    pm.removeQueuingPlayer(p);
+                    p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] You are no longer queuing.");
+                    return;
                 }
                 p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] Please wait, we're finding someone to fight you.");
                 

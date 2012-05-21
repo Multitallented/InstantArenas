@@ -49,12 +49,13 @@ public class DeathListener implements Listener {
     public void onPlayerLogout(PlayerQuitEvent event) {
         Player p = event.getPlayer();
         PlayerManager pm = (PlayerManager) Controller.getInstance("playermanager");
+        ArenaManager am = (ArenaManager) Controller.getInstance("arenamanager");
         if (pm.hasRespawningPlayer(p)) {
-            //TODO write this
+            
         } else if (pm.containsQueuingPlayer(p)) {
-            
+            pm.removeQueuingPlayer(p);
         } else if (pm.hasFightingPlayer(p)) {
-            
+            am.checkEndMatch(p);
         }
     }
 

@@ -24,25 +24,25 @@ public class RTSArenaBuilder implements ArenaBuilder {
     @Override
     public Location getStartPoint(int i) {
         if (i==0) {
-            return new Location(l.getWorld(), l.getX() + 3, l.getY() + 2, l.getZ() + 4);
+            return new Location(l.getWorld(), l.getX() + 3.5, l.getY() + 2, l.getZ() + 4.5);
         } else if (i==1) {
-            return new Location(l.getWorld(), l.getX() + 17, l.getY() + 2, l.getZ() + 16);
+            return new Location(l.getWorld(), l.getX() + 17.5, l.getY() + 2, l.getZ() + 16.5);
         } else if (i==2) {
-            return new Location(l.getWorld(), l.getX() + 4, l.getY() + 2, l.getZ() + 3);
+            return new Location(l.getWorld(), l.getX() + 4.5, l.getY() + 2, l.getZ() + 3.5);
         } else if (i==3) {
-            return new Location(l.getWorld(), l.getX() + 16, l.getY() + 2, l.getZ() + 17);
+            return new Location(l.getWorld(), l.getX() + 16.5, l.getY() + 2, l.getZ() + 17.5);
         } else {
-            return new Location(l.getWorld(), l.getX() + 3, l.getY() + 2, l.getZ() + 4);
+            return new Location(l.getWorld(), l.getX() + 3.5, l.getY() + 2, l.getZ() + 4.5);
         }
     }
     
     @Override
     public void build(Location loc) {
-        this.l = loc;
-        World world = loc.getWorld();
-        int x0 = (int) loc.getX();
-        int y0 = (int) loc.getY();
-        int z0 = (int) loc.getZ();
+        this.l = new Location(loc.getWorld(), loc.getX(), loc.getY() + 64, loc.getZ());
+        World world = l.getWorld();
+        int x0 = (int) l.getX();
+        int y0 = (int) l.getY();
+        int z0 = (int) l.getZ();
         
         for (int x=0; x<21;x++) {
             for (int y=0; y<7; y++) {
