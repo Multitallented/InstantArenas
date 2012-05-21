@@ -36,7 +36,8 @@ public class QueueCommand implements HCommand {
                 Player p = (Player) cs;
                 
                 //Perform a permission check to see if they can queue
-                if (!((Permission) Controller.getInstance("perm")).has(p, "heromatchmaking.queue")) {
+                Permission perm = (Permission) Controller.getInstance("perm");
+                if (perm != null && !perm.has(p, "heromatchmaking.queue")) {
                     p.sendMessage(ChatColor.GRAY + "[HeroMatchMaking] You don't have permission to queue");
                     return;
                 }
@@ -44,6 +45,7 @@ public class QueueCommand implements HCommand {
                 if (!pm.containsQueuingPlayer(p)) {
                     pm.addQueuingPlayer(p);
                 }
+                p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] Please wait, we're finding someone to fight you.");
                 
                 HashSet<Player> readyPlayers = pm.checkStartMatch();
                 while (readyPlayers != null) {
@@ -57,6 +59,7 @@ public class QueueCommand implements HCommand {
                         pm.removeQueuingPlayer(p0);
                         pm.putPlayerLocation(p0, arena);
                     }
+                    readyPlayers = pm.checkStartMatch();
                     
                 }
                 

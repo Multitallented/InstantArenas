@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.parts.redcastlemedia.multitallented.controllers.CommandManager;
 import org.parts.redcastlemedia.multitallented.controllers.Controller;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.managers.HMMCommandManager;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.managers.InitManager;
 
 /**
@@ -26,6 +27,7 @@ public class HeroMatchMaking extends JavaPlugin {
         Controller controller = new Controller(this);
         InitManager im = new InitManager();
         Controller.addInstance("initmanager", im);
+        Controller.addInstance("commandmanager", new HMMCommandManager());
         controller.init();
         System.out.println(this + " is now enabled!");
     }

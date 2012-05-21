@@ -16,6 +16,7 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.builders.ArenaBuilde
 public class PlayerManager {
     private HashMap<Player, ArenaBuilder> playerLocations = new HashMap<Player, ArenaBuilder>();
     private HashSet<Player> queuingPlayers = new HashSet<Player>();
+    private HashSet<Player> respawningPlayers = new HashSet<Player>();
     
     public ArenaBuilder getPlayerLocation(Player p) {
         return playerLocations.get(p);
@@ -39,6 +40,27 @@ public class PlayerManager {
     
     public void removeQueuingPlayer(Player p) {
         queuingPlayers.remove(p);
+    }
+    
+    public boolean hasFightingPlayer(Player p) {
+        return playerLocations.containsKey(p);
+    }
+    
+    public boolean hasRespawningPlayer(Player p) {
+        return respawningPlayers.contains(p);
+    }
+    
+    public void addRespawningPlayer(Player p) {
+        respawningPlayers.add(p);
+    }
+    
+    public boolean removeRespawningPlayer(Player p) {
+        if (respawningPlayers.contains(p)) {
+            respawningPlayers.remove(p);
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public HashSet<Player> checkStartMatch() {

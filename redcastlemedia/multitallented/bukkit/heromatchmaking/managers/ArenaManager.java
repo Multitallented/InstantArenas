@@ -7,6 +7,8 @@ package redcastlemedia.multitallented.bukkit.heromatchmaking.managers;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.classes.HeroClass;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -16,7 +18,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.parts.redcastlemedia.multitallented.controllers.Controller;
 import org.parts.redcastlemedia.multitallented.models.YMLProxy;
@@ -32,7 +37,7 @@ public class ArenaManager {
     private final World world;
     private HashMap<Player, ArenaBuilder> existingArenas = new HashMap<Player, ArenaBuilder>();
     private HashMap<Player, Location> previousLocation = new HashMap<Player, Location>();
-    private HashMap<Player, Inventory> previousInventory = new HashMap<Player, Inventory>();
+    private HashMap<Player, ArrayList<ItemStack>> previousInventory = new HashMap<Player, ArrayList<ItemStack>>();
     private HashMap<Player, HeroClass> previousClass = new HashMap<Player, HeroClass>();
     private HashMap<Player, Integer> previousHealth = new HashMap<Player, Integer>();
     
@@ -90,14 +95,62 @@ public class ArenaManager {
                 p.setHealth(previousHealth.get(p));
             }
         }
+        PlayerInventory pInv = p.getInventory();
+        ArrayList<ItemStack> inv = previousInventory.get(p);
+        pInv.setBoots(inv.get(3));
+        pInv.setHelmet(inv.get(0));
+        pInv.setLeggings(inv.get(2));
+        pInv.setChestplate(inv.get(1));
+        for (int k = 4; k<inv.size(); k++) {
+            pInv.addItem(inv.get(k));
+        }
     }
     
-    public void endMatch(Player p) {
+    public void checkEndMatch(Player p) {
+        ArenaBuilder ab = existingArenas.get(p);
+        HashSet<HashSet<Player>> players = ab.getPlayers();
+        if (players.size() > 1) {
+            return;
+        }
+        HashSet<HashSet<Player>> tempPlayers = ab.getPlayers();
+        HashSet<HashSet<Player>> destroyThese = new HashSet<HashSet<Player>>();
+        for (HashSet<Player> playerSet : tempPlayers) {
+            if (playerSet.contains(p)) {
+                //TODO Record stats
+                if (playerSet.size() < 2) {
+                    destroyThese.add(playerSet);
+                    break;
+                } else {
+                    playerSet.remove(p);
+                    return;
+                }
+            }
+        }
+        for (HashSet<Player> destroy : destroyThese) {
+            tempPlayers.remove(destroy);
+        }
+        System.out.println(tempPlayers.size());
+        System.out.println(ab.getPlayers().size());
+        if (tempPlayers.size() > 1) {
+            return;
+        }
         
+        //record stats
+        for (HashSet<Player> playerSet : tempPlayers) {
+            for (Player pl : playerSet) {
+                returnPlayer(pl);
+            }
+        }
+        //remove arena from list and make the arena available
+        
+        
+        //TODO end the match
+        //Clear all itemstacks in arena
     }
     
     private void setupNextArena(ArenaBuilder arena, HashSet<Player> players) {
         int j=0;
+        //TODO fix this to be dynamic with custom arena sizes
         for (Integer i : arenas.keySet()) {
             if (j != i) {
                 break;
@@ -107,15 +160,23 @@ public class ArenaManager {
         Location l = new Location(world, 0 + (20*j), 0, 0);
         arena.build(l);
         arenas.put(j, arena);
+        HashSet<HashSet<Player>> play = new HashSet<HashSet<Player>>();
         Object h = Controller.getInstance("heroes");
         Heroes heroes = null;
         if (h!=null) {
             heroes = (Heroes) h;
         }
         int i=0;
+        PlayerManager pm = (PlayerManager) Controller.getInstance("playermanager");
         for (Player p : players) {
+            //TODO make this dynamic
+            HashSet<Player> tempPlayers = new HashSet<Player>();
+            tempPlayers.add(p);
+            play.add(tempPlayers);
+            //////////////////
             existingArenas.put(p, arena);
             previousLocation.put(p, p.getLocation());
+            pm.putPlayerLocation(p, arena);
             if (heroes != null) {
                 Hero hero = heroes.getCharacterManager().getHero(p);
                 previousHealth.put(p, hero.getHealth());
@@ -126,8 +187,8 @@ public class ArenaManager {
                 previousHealth.put(p, p.getHealth());
                 p.setHealth(20);
             }
-            previousInventory.put(p, p.getInventory());
-            Bukkit.createInventory(p, InventoryType.PLAYER);
+            previousInventory.put(p, copyInventory(p));
+            p.getInventory().clear();
             p.updateInventory();
             
             p.teleport(arena.getStartPoint(i));
@@ -136,5 +197,46 @@ public class ArenaManager {
         }
         
         
+    }
+    
+    private ArrayList<ItemStack> copyInventory(Player p) {
+        PlayerInventory inv = p.getInventory();
+        ArrayList<ItemStack> pInv = new ArrayList<ItemStack>();
+        
+        pInv.add(inv.getHelmet());
+        pInv.add(inv.getChestplate());
+        pInv.add(inv.getLeggings());
+        pInv.add(inv.getBoots());
+        
+        pInv.addAll(Arrays.asList(inv.getContents()));
+        return pInv;
+    }
+
+    public void playerRespawned(PlayerRespawnEvent event) {
+        Player p = event.getPlayer();
+        event.setRespawnLocation(previousLocation.get(p));
+        PlayerInventory pInv = p.getInventory();
+        ArrayList<ItemStack> inv = previousInventory.get(p);
+        pInv.setBoots(inv.get(3));
+        pInv.setHelmet(inv.get(0));
+        pInv.setLeggings(inv.get(2));
+        pInv.setChestplate(inv.get(1));
+        for (int k = 4; k<inv.size(); k++) {
+            pInv.addItem(inv.get(k));
+        }
+        Hero hero = null;
+        if (previousClass.containsKey(p)) {
+            hero = ((Heroes) Controller.getInstance("heroes")).getCharacterManager().getHero(p);
+            if (hero != null) {
+                hero.changeHeroClass(previousClass.get(p), false);
+            }
+        }
+        if (previousHealth.containsKey(p)) {
+            if (hero != null) {
+                hero.setHealth(previousHealth.get(p));
+            } else {
+                p.setHealth(previousHealth.get(p));
+            }
+        }
     }
 }

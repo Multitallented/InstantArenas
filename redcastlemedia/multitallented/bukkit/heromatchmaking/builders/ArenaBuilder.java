@@ -4,7 +4,9 @@
  */
 package redcastlemedia.multitallented.bukkit.heromatchmaking.builders;
 
+import java.util.HashSet;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -14,4 +16,9 @@ public interface ArenaBuilder {
     public void build(Location loc);
     
     public Location getStartPoint(int i);
+    
+    public HashSet<HashSet<Player>> getPlayers();
+    
+    public void setPlayers(HashSet<HashSet<Player>> players);
+    
 }

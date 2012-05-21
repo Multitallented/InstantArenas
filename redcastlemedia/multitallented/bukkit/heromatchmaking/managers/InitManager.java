@@ -12,13 +12,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.parts.redcastlemedia.multitallented.controllers.Controller;
 import org.parts.redcastlemedia.multitallented.controllers.Manager;
 import org.parts.redcastlemedia.multitallented.controllers.Order;
 import org.parts.redcastlemedia.multitallented.listeners.BukkitEventListener;
 import org.parts.redcastlemedia.multitallented.models.YMLProxy;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.HeroMatchMaking;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.builders.ProxyBuilder;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.listeners.DeathListener;
 
 /**
  *
@@ -55,16 +56,20 @@ public class InitManager implements Manager {
                     Economy econ = (Economy) Controller.getInstance("econ");
                     if (rsp != null) {
                         econ = rsp.getProvider();
-                        if (econ != null)
+                        if (econ != null) {
                             System.out.println("[HeroMatchMaking] Hooked into " + econ.getName());
+                            Controller.addInstance("econ", econ);
+                        }
                     }
 
                     Permission perm = (Permission) Controller.getInstance("perm");
                     RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
                     if (permissionProvider != null) {
                         perm = permissionProvider.getProvider();
-                        if (perm != null)
+                        if (perm != null) {
                             System.out.println("[HeroMatchMaking] Hooked into " + perm.getName());
+                            Controller.addInstance("perm", perm);
+                        }
                     }
                 } else {
                     new BukkitEventListener() {
@@ -75,16 +80,20 @@ public class InitManager implements Manager {
                                 Economy econ = (Economy) Controller.getInstance("econ");
                                 if (rsp != null) {
                                     econ = rsp.getProvider();
-                                    if (econ != null)
+                                    if (econ != null) {
                                         System.out.println("[HeroMatchMaking] Hooked into " + econ.getName());
+                                        Controller.addInstance("econ", econ);
+                                    }
                                 }
 
                                 Permission perm = (Permission) Controller.getInstance("perm");
                                 RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
                                 if (permissionProvider != null) {
                                     perm = permissionProvider.getProvider();
-                                    if (perm != null)
+                                    if (perm != null) {
                                         System.out.println("[HeroMatchMaking] Hooked into " + perm.getName());
+                                        Controller.addInstance("perm", perm);
+                                    }
                                 }
                             }
                         }
@@ -93,7 +102,7 @@ public class InitManager implements Manager {
                 
                 //Load data
                 YMLProxy config = ProxyBuilder.buildDefaultConfigProxy();
-                JavaPlugin plugin = (JavaPlugin) Controller.getInstance("plugin");
+                HeroMatchMaking plugin = (HeroMatchMaking) Controller.getInstance("plugin");
                 File file = new File(plugin.getDataFolder(), "config.yml");
                 File folder = new File(plugin.getDataFolder() + "");
                 if (!folder.exists()) {
@@ -106,6 +115,9 @@ public class InitManager implements Manager {
                 Controller.addInstance("arenamanager", new ArenaManager());
                 
                 //Setup listeners
+                DeathListener dl = new DeathListener();
+                Bukkit.getPluginManager().registerEvents(dl, plugin);
+                Controller.addInstance("deathlistener", dl);
             }
             
         };
