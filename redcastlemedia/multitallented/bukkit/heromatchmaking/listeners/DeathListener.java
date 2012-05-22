@@ -5,10 +5,12 @@
 
 package redcastlemedia.multitallented.bukkit.heromatchmaking.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.parts.redcastlemedia.multitallented.controllers.Controller;
@@ -56,6 +58,16 @@ public class DeathListener implements Listener {
             pm.removeQueuingPlayer(p);
         } else if (pm.hasFightingPlayer(p)) {
             am.checkEndMatch(p);
+        }
+    }
+    
+    @EventHandler
+    public void onCommandPreProcess(PlayerCommandPreprocessEvent event) {
+        PlayerManager pm = (PlayerManager) Controller.getInstance("playermanager");
+        String label = event.getMessage().replace("/", "").split(" ")[0];
+        if (pm.hasFightingPlayer(event.getPlayer()) && !label.equalsIgnoreCase("suicide")) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.GRAY + "[HeroMatchMaking] You may only use /suicide while in the arena");
         }
     }
 

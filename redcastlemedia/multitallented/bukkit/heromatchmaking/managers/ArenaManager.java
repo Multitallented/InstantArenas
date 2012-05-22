@@ -16,6 +16,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +41,8 @@ public class ArenaManager {
     private HashMap<Player, HeroClass> previousClass = new HashMap<Player, HeroClass>();
     private HashMap<Player, Integer> previousHealth = new HashMap<Player, Integer>();
     private HashMap<Player, Integer> previousFood = new HashMap<Player, Integer>();
-    private HashMap<Player, Integer> previousExp = new HashMap<Player, Integer>();
+    private HashMap<Player, Float> previousExp = new HashMap<Player, Float>();
+    private HashMap<Player, Integer> previousMana = new HashMap<Player, Integer>();
     
     public ArenaManager() {
         YMLProxy config = (YMLProxy) Controller.getInstance("config");
@@ -95,7 +98,17 @@ public class ArenaManager {
                 p.setHealth(previousHealth.get(p));
             }
         }
+        if (previousExp.containsKey(p)) {
+            p.setExp(previousExp.get(p));
+        }
+        if (previousFood.containsKey(p)) {
+            p.setFoodLevel(previousFood.get(p));
+        }
+        if (previousMana.containsKey(p)) {
+            hero.setMana(previousMana.get(p));
+        }
         PlayerInventory pInv = p.getInventory();
+        pInv.clear();
         ArrayList<ItemStack> inv = previousInventory.get(p);
         if (inv.get(3) != null) {
             pInv.setBoots(inv.get(3));
@@ -165,7 +178,19 @@ public class ArenaManager {
         //remove arena from list and make the arena available
         arenas.remove(ab);
         //Clear all itemstacks in arena
-        
+    }
+    
+    public void clearDroppedItems(ArenaBuilder ab) {
+        Location l = ab.getLocation();
+        int size = ab.getSize();
+        for (Entity e : l.getWorld().getEntitiesByClass(Item.class)) {
+           double x = e.getLocation().getX();
+           double z = e.getLocation().getZ();
+           if (x < l.getX() || x > l.getX() + size || z < l.getZ() || z > l.getZ() + size) {
+               continue;
+           }
+           e.remove();
+        }
     }
     
     public void setLocation(ArenaBuilder ab) {
@@ -207,6 +232,8 @@ public class ArenaManager {
         arena.build();
         arenas.add(arena.getID(), arena);
         
+        clearDroppedItems(arena);
+        
         HashSet<HashSet<Player>> play = new HashSet<HashSet<Player>>();
         Object h = Controller.getInstance("heroes");
         Heroes heroes = null;
@@ -233,22 +260,25 @@ public class ArenaManager {
                 hero.setHealth(hero.getMaxHealth());
                 previousClass.put(p, hero.getHeroClass());
                 hero.changeHeroClass(heroes.getClassManager().getClass(((YMLProxy) Controller.getInstance("config")).getString("default-class")), false);
+                previousMana.put(p, hero.getMana());
+                hero.setMana(hero.getMaxMana());
             } else {
                 previousHealth.put(p, p.getHealth());
                 p.setHealth(20);
             }
+            previousExp.put(p, p.getExp());
+            previousFood.put(p, p.getFoodLevel());
+            p.setFoodLevel(20);
             previousInventory.put(p, copyInventory(p));
             p.getInventory().clear();
             p.updateInventory();
             
             Location test = arena.getStartPoint(i);
-            System.out.println((int) test.getX() + ":" + (int) test.getY() + ":" + (int) test.getZ());
             p.teleport(arena.getStartPoint(i));
             p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] Your match has begun!");
             i++;
         }
         Location test = arena.getLocation();
-        System.out.println((int) test.getX() + ":" + (int) test.getY() + ":" + (int) test.getZ());
         arena.setPlayers(play);
     }
     
@@ -269,6 +299,7 @@ public class ArenaManager {
         Player p = event.getPlayer();
         event.setRespawnLocation(previousLocation.get(p));
         PlayerInventory pInv = p.getInventory();
+        pInv.clear();
         ArrayList<ItemStack> inv = previousInventory.get(p);
         if (inv.get(3) != null) {
             pInv.setBoots(inv.get(3));
@@ -300,6 +331,15 @@ public class ArenaManager {
             } else {
                 p.setHealth(previousHealth.get(p));
             }
+        }
+        if (previousExp.containsKey(p)) {
+            p.setExp(previousExp.get(p));
+        }
+        if (previousFood.containsKey(p)) {
+            p.setFoodLevel(previousFood.get(p));
+        }
+        if (previousMana.containsKey(p)) {
+            hero.setMana(previousMana.get(p));
         }
     }
 }

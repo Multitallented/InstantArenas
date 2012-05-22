@@ -22,15 +22,15 @@ public class RTSArenaBuilder extends ArenaBuilder {
     public Location getStartPoint(int i) {
         Location l = super.getLocation();
         if (i==0) {
-            return new Location(l.getWorld(), l.getX() + 3.5, l.getY() + 66, l.getZ() + 4.5);
+            return new Location(l.getWorld(), l.getX() + 8.5, l.getY() + 66.5, l.getZ() + 5);
         } else if (i==1) {
-            return new Location(l.getWorld(), l.getX() + 17.5, l.getY() + 66, l.getZ() + 16.5);
+            return new Location(l.getWorld(), l.getX() + 11.5, l.getY() + 66.5, l.getZ() + 15);
         } else if (i==2) {
-            return new Location(l.getWorld(), l.getX() + 4.5, l.getY() + 66, l.getZ() + 3.5);
+            return new Location(l.getWorld(), l.getX() + 8.5, l.getY() + 66.5, l.getZ() + 5);
         } else if (i==3) {
-            return new Location(l.getWorld(), l.getX() + 16.5, l.getY() + 66, l.getZ() + 17.5);
+            return new Location(l.getWorld(), l.getX() + 11.5, l.getY() + 66.5, l.getZ() + 15);
         } else {
-            return new Location(l.getWorld(), l.getX() + 3.5, l.getY() + 66, l.getZ() + 4.5);
+            return new Location(l.getWorld(), l.getX() + 8.5, l.getY() + 66.5, l.getZ() + 5);
         }
     }
     
