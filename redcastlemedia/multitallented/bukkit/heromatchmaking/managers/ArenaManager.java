@@ -163,10 +163,9 @@ public class ArenaManager {
         
         
         //remove arena from list and make the arena available
-        
-        
-        //TODO end the match
+        arenas.remove(ab);
         //Clear all itemstacks in arena
+        
     }
     
     public void setLocation(ArenaBuilder ab) {
@@ -191,7 +190,7 @@ public class ArenaManager {
                         continue;
                     }
                 } else {
-                    ab.setLocation(j+1, new Location(world, prevLocation.getX() + prevSize, 0, 0));
+                    ab.setLocation(j+1, new Location(world, prevLocation.getX() + arenaBuilder.getSize(), 0, 0));
                     index = -2;
                 }
             }
@@ -242,12 +241,15 @@ public class ArenaManager {
             p.getInventory().clear();
             p.updateInventory();
             
+            Location test = arena.getStartPoint(i);
+            System.out.println((int) test.getX() + ":" + (int) test.getY() + ":" + (int) test.getZ());
             p.teleport(arena.getStartPoint(i));
             p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] Your match has begun!");
             i++;
         }
+        Location test = arena.getLocation();
+        System.out.println((int) test.getX() + ":" + (int) test.getY() + ":" + (int) test.getZ());
         arena.setPlayers(play);
-        
     }
     
     private ArrayList<ItemStack> copyInventory(Player p) {
