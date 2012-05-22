@@ -10,35 +10,34 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Furnace;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
  *
  * @author Multitallented
  */
-public class RTSArenaBuilder implements ArenaBuilder {
-    private Location l;
-    private HashSet<HashSet<Player>> players = new HashSet<HashSet<Player>>();
+public class RTSArenaBuilder extends ArenaBuilder {
     
     @Override
     public Location getStartPoint(int i) {
+        Location l = super.getLocation();
         if (i==0) {
-            return new Location(l.getWorld(), l.getX() + 3.5, l.getY() + 2, l.getZ() + 4.5);
+            return new Location(l.getWorld(), l.getX() + 3.5, l.getY() + 66, l.getZ() + 4.5);
         } else if (i==1) {
-            return new Location(l.getWorld(), l.getX() + 17.5, l.getY() + 2, l.getZ() + 16.5);
+            return new Location(l.getWorld(), l.getX() + 17.5, l.getY() + 66, l.getZ() + 16.5);
         } else if (i==2) {
-            return new Location(l.getWorld(), l.getX() + 4.5, l.getY() + 2, l.getZ() + 3.5);
+            return new Location(l.getWorld(), l.getX() + 4.5, l.getY() + 66, l.getZ() + 3.5);
         } else if (i==3) {
-            return new Location(l.getWorld(), l.getX() + 16.5, l.getY() + 2, l.getZ() + 17.5);
+            return new Location(l.getWorld(), l.getX() + 16.5, l.getY() + 66, l.getZ() + 17.5);
         } else {
-            return new Location(l.getWorld(), l.getX() + 3.5, l.getY() + 2, l.getZ() + 4.5);
+            return new Location(l.getWorld(), l.getX() + 3.5, l.getY() + 66, l.getZ() + 4.5);
         }
     }
     
     @Override
-    public void build(Location loc) {
-        this.l = new Location(loc.getWorld(), loc.getX(), loc.getY() + 64, loc.getZ());
+    public void build() {
+        Location loc = super.getLocation();
+        Location l = new Location(loc.getWorld(), loc.getX(), loc.getY() + 64, loc.getZ());
         World world = l.getWorld();
         int x0 = (int) l.getX();
         int y0 = (int) l.getY();
@@ -129,13 +128,8 @@ public class RTSArenaBuilder implements ArenaBuilder {
     }
 
     @Override
-    public HashSet<HashSet<Player>> getPlayers() {
-        return players;
-    }
-
-    @Override
-    public void setPlayers(HashSet<HashSet<Player>> players) {
-        this.players = players;
+    public int getSize() {
+        return 20;
     }
     
 }

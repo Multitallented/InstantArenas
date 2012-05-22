@@ -4,21 +4,19 @@
  */
 package redcastlemedia.multitallented.bukkit.heromatchmaking.builders;
 
-import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 /**
  *
  * @author Multitallented
  */
-public class LobbyBuilder implements ArenaBuilder {
-    private HashSet<HashSet<Player>> players = new HashSet<HashSet<Player>>();
+public class LobbyBuilder extends ArenaBuilder {
 
     @Override
-    public void build(Location loc) {
+    public void build() {
+        Location loc = super.getLocation();
         //TODO do this part
         World world = loc.getWorld();
         int x0 = (int) loc.getX();
@@ -84,12 +82,8 @@ public class LobbyBuilder implements ArenaBuilder {
     }
     
     @Override
-    public HashSet<HashSet<Player>> getPlayers() {
-        return players;
-    }
-
-    @Override
-    public void setPlayers(HashSet<HashSet<Player>> players) {
-        this.players = players;
+    public int getSize() {
+        //TODO change this when you make the lobby
+        return 10;
     }
 }

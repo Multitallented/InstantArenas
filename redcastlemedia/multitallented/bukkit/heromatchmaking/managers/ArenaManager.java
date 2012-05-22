@@ -31,7 +31,7 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.builders.RTSArenaBui
  * @author Multitallented
  */
 public class ArenaManager {
-    private HashMap<Integer, ArenaBuilder> arenas = new HashMap<Integer, ArenaBuilder>();
+    private ArrayList<ArenaBuilder> arenas = new ArrayList<ArenaBuilder>();
     private final World world;
     private HashMap<Player, ArenaBuilder> existingArenas = new HashMap<Player, ArenaBuilder>();
     private HashMap<Player, Location> previousLocation = new HashMap<Player, Location>();
@@ -61,7 +61,7 @@ public class ArenaManager {
         return existingArenas.get(p);
     }
     
-    public void scheduleMatch(final HashSet<Player> players, ArenaBuilder ab) {
+    public void scheduleMatch(final HashSet<Player> players, final ArenaBuilder ab) {
         for (Player p : players) {
             p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] Your match will begin in 5s");
         }
@@ -72,7 +72,7 @@ public class ArenaManager {
                 @Override
                 public void run() {
                     //TODO put players in a match
-                    setupNextArena(new RTSArenaBuilder(), players);
+                    setupNextArena(ab, players);
                 }
                     
                 }, 100l);
@@ -161,6 +161,7 @@ public class ArenaManager {
             }
         }
         
+        
         //remove arena from list and make the arena available
         
         
@@ -168,18 +169,45 @@ public class ArenaManager {
         //Clear all itemstacks in arena
     }
     
-    private void setupNextArena(ArenaBuilder arena, HashSet<Player> players) {
+    public void setLocation(ArenaBuilder ab) {
         int j=0;
-        //TODO fix this to be dynamic with custom arena sizes
-        for (Integer i : arenas.keySet()) {
-            if (j != i) {
-                break;
+        Location prevLocation = new Location(world, 0, 0, 0);
+        int prevSize = 999999999;
+        int size = ab.getSize();
+        if (arenas.isEmpty()) {
+            ab.setLocation(0, new Location(world, 0, 0, 0));
+        } else {
+            int index = -1;
+            for (ArenaBuilder arenaBuilder : arenas) {
+                if (arenas.size() > j+1) {
+                    if (arenas.get(j+1).getLocation().getX() - size > prevSize + prevLocation.getX()) {
+                        ab.setLocation(j, new Location(world, prevLocation.getX() + prevSize, 0, 0));
+                        index = j;
+                        break;
+                    } else {
+                        prevSize = arenaBuilder.getSize();
+                        prevLocation = arenaBuilder.getLocation();
+                        j++;
+                        continue;
+                    }
+                } else {
+                    ab.setLocation(j+1, new Location(world, prevLocation.getX() + prevSize, 0, 0));
+                    index = -2;
+                }
             }
-            j++;
+            if (index == -2) {
+                arenas.add(ab);
+            } else if (index != -1) {
+                arenas.add(j, ab);
+            }
+            
         }
-        Location l = new Location(world, 0 + (20*j), 0, 0);
-        arena.build(l);
-        arenas.put(j, arena);
+    }
+    
+    private void setupNextArena(ArenaBuilder arena, HashSet<Player> players) {
+        arena.build();
+        arenas.add(arena.getID(), arena);
+        
         HashSet<HashSet<Player>> play = new HashSet<HashSet<Player>>();
         Object h = Controller.getInstance("heroes");
         Heroes heroes = null;
@@ -236,7 +264,6 @@ public class ArenaManager {
     }
 
     public void playerRespawned(PlayerRespawnEvent event) {
-        System.out.println("player respawned");
         Player p = event.getPlayer();
         event.setRespawnLocation(previousLocation.get(p));
         PlayerInventory pInv = p.getInventory();

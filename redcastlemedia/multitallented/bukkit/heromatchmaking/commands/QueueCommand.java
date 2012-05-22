@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.parts.redcastlemedia.multitallented.controllers.Controller;
 import org.parts.redcastlemedia.multitallented.controllers.Order;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.builders.ArenaBuilder;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.builders.RTSArenaBuilder;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.managers.ArenaManager;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.managers.PlayerManager;
@@ -52,19 +53,18 @@ public class QueueCommand implements HCommand {
                 p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] Please wait, we're finding someone to fight you.");
                 
                 HashSet<Player> readyPlayers = pm.checkStartMatch();
+
+                ArenaManager am = (ArenaManager) Controller.getInstance("arenamanager");
                 while (readyPlayers != null) {
-
-                    //TODO change this to be dynamic later
-                    RTSArenaBuilder arena = new RTSArenaBuilder();
-
-                    ArenaManager am = (ArenaManager) Controller.getInstance("arenamanager");
+                    
+                    ArenaBuilder arena = new RTSArenaBuilder();
+                    am.setLocation(arena);
                     am.scheduleMatch(readyPlayers, arena);
                     for (Player p0 : readyPlayers) {
                         pm.removeQueuingPlayer(p0);
                         pm.putPlayerLocation(p0, arena);
                     }
                     readyPlayers = pm.checkStartMatch();
-                    
                 }
                 
             }

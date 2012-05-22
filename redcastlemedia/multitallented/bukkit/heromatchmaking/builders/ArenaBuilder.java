@@ -12,13 +12,36 @@ import org.bukkit.entity.Player;
  *
  * @author Multitallented
  */
-public interface ArenaBuilder {
-    public void build(Location loc);
+public abstract class ArenaBuilder {
+    private HashSet<HashSet<Player>> players = new HashSet<HashSet<Player>>();
+    private Location l;
+    private int id;
     
-    public Location getStartPoint(int i);
+    public void setLocation(int id, Location l) {
+        this.l = l;
+        this.id = id;
+    }
     
-    public HashSet<HashSet<Player>> getPlayers();
+    public abstract void build();
     
-    public void setPlayers(HashSet<HashSet<Player>> players);
+    public abstract Location getStartPoint(int i);
+    
+    public Location getLocation() {
+        return l;
+    }
+    
+    public int getID() {
+        return id;
+    }
+    
+    public abstract int getSize();
+    
+    public HashSet<HashSet<Player>> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(HashSet<HashSet<Player>> players) {
+        this.players = players;
+    }
     
 }
