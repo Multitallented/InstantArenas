@@ -23,8 +23,12 @@ public class ProxyBuilder {
                     }
                     
                     load(file);
-                    set("default-class", "Citizen");
+                    set("heroes.use-default-class", "false");
+                    set("heroes.default-class", "Citizen");
                     set("world", "matchmaking");
+                    set("game-types.rts", true);
+                    set("game-types.spleef", true);
+                    set("team-types.1v1", true);
                     save(file);
                     //TODO write default config values here
                 } catch (Exception e) {

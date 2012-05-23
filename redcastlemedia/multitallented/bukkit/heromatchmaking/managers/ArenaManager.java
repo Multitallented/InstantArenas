@@ -70,15 +70,48 @@ public class ArenaManager {
         }
         
         Bukkit.getScheduler().scheduleSyncDelayedTask((JavaPlugin) Controller.getInstance("plugin"), 
-                new Runnable() {
-
-                @Override
-                public void run() {
-                    //TODO put players in a match
-                    setupNextArena(ab, players);
+            new Runnable() {
+            @Override
+            public void run() {
+                for (Player p : players) {
+                    p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] 4s");
                 }
-                    
-                }, 100l);
+            }
+        }, 20l);
+        Bukkit.getScheduler().scheduleSyncDelayedTask((JavaPlugin) Controller.getInstance("plugin"), 
+            new Runnable() {
+            @Override
+            public void run() {
+                for (Player p : players) {
+                    p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] 3s");
+                }
+            }
+        }, 40l);
+        Bukkit.getScheduler().scheduleSyncDelayedTask((JavaPlugin) Controller.getInstance("plugin"), 
+            new Runnable() {
+            @Override
+            public void run() {
+                for (Player p : players) {
+                    p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] 2s");
+                }
+            }
+        }, 60l);
+        Bukkit.getScheduler().scheduleSyncDelayedTask((JavaPlugin) Controller.getInstance("plugin"), 
+            new Runnable() {
+            @Override
+            public void run() {
+                for (Player p : players) {
+                    p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] 1s");
+                }
+            }
+        }, 80l);
+        Bukkit.getScheduler().scheduleSyncDelayedTask((JavaPlugin) Controller.getInstance("plugin"), 
+            new Runnable() {
+            @Override
+            public void run() {
+                setupNextArena(ab, players);
+            }
+        }, 100l);
         
     }
     
@@ -249,8 +282,6 @@ public class ArenaManager {
             play.add(tempPlayers);
             //////////////////
             
-            //TODO previous food
-            //TODO previous exp
             existingArenas.put(p, arena);
             previousLocation.put(p, p.getLocation());
             pm.putPlayerLocation(p, arena);
@@ -270,15 +301,19 @@ public class ArenaManager {
             previousFood.put(p, p.getFoodLevel());
             p.setFoodLevel(20);
             previousInventory.put(p, copyInventory(p));
-            p.getInventory().clear();
+            PlayerInventory pInv = p.getInventory();
+            pInv.clear();
+            pInv.setBoots(null);
+            pInv.setLeggings(null);
+            pInv.setChestplate(null);
+            pInv.setHelmet(null);
+            
             p.updateInventory();
             
-            Location test = arena.getStartPoint(i);
             p.teleport(arena.getStartPoint(i));
             p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] Your match has begun!");
             i++;
         }
-        Location test = arena.getLocation();
         arena.setPlayers(play);
     }
     
