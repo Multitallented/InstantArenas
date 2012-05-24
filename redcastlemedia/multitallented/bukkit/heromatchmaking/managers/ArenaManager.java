@@ -68,6 +68,10 @@ public class ArenaManager {
         for (Player p : players) {
             p.sendMessage(ChatColor.GOLD + "[HeroMatchMaking] Your match will begin in 5s");
         }
+        ab.build();
+        arenas.add(ab.getID(), ab);
+        
+        clearDroppedItems(ab);
         
         Bukkit.getScheduler().scheduleSyncDelayedTask((JavaPlugin) Controller.getInstance("plugin"), 
             new Runnable() {
@@ -262,10 +266,6 @@ public class ArenaManager {
     }
     
     private void setupNextArena(ArenaBuilder arena, HashSet<Player> players) {
-        arena.build();
-        arenas.add(arena.getID(), arena);
-        
-        clearDroppedItems(arena);
         
         HashSet<HashSet<Player>> play = new HashSet<HashSet<Player>>();
         Object h = Controller.getInstance("heroes");
@@ -307,7 +307,9 @@ public class ArenaManager {
             pInv.setLeggings(null);
             pInv.setChestplate(null);
             pInv.setHelmet(null);
-            
+            for (ItemStack is : arena.getStartingItems()) {
+                pInv.addItem(is);
+            }
             p.updateInventory();
             
             p.teleport(arena.getStartPoint(i));

@@ -4,10 +4,11 @@
  */
 package redcastlemedia.multitallented.bukkit.heromatchmaking.builders;
 
-import redcastlemedia.multitallented.bukkit.heromatchmaking.GameType;
 import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.GameType;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.TeamType;
 
 /**
@@ -19,9 +20,12 @@ public abstract class ArenaBuilder {
     private Location l;
     private int id;
     private boolean joinInProgress;
-    private TeamType teamType;
-    private GameType gameType;
     
+    public abstract HashSet<TeamType> getTeamTypes();
+    
+    public abstract GameType getGameType();
+    
+    public abstract HashSet<ItemStack> getStartingItems();
     
     public void setLocation(int id, Location l) {
         this.l = l;

@@ -11,6 +11,8 @@ import org.bukkit.World;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Furnace;
 import org.bukkit.inventory.ItemStack;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.GameType;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.TeamType;
 
 /**
  *
@@ -130,6 +132,24 @@ public class RTSArenaBuilder extends ArenaBuilder {
     @Override
     public int getSize() {
         return 20;
+    }
+    
+    @Override
+    public GameType getGameType() {
+        return GameType.RTS;
+    }
+    
+    @Override
+    public HashSet<TeamType> getTeamTypes() {
+        HashSet<TeamType> types = new HashSet<TeamType>();
+        types.add(TeamType.ONE_V_ONE);
+        types.add(TeamType.TWO_V_TWO);
+        return types;
+    }
+    
+    @Override
+    public HashSet<ItemStack> getStartingItems() {
+        return new HashSet<ItemStack>();
     }
     
 }
