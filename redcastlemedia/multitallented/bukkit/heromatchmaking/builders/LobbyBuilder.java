@@ -4,9 +4,13 @@
  */
 package redcastlemedia.multitallented.bukkit.heromatchmaking.builders;
 
+import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.GameType;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.TeamType;
 
 /**
  *
@@ -85,5 +89,22 @@ public class LobbyBuilder extends ArenaBuilder {
     public int getSize() {
         //TODO change this when you make the lobby
         return 10;
+    }
+    
+    @Override
+    public GameType getGameType() {
+        return GameType.LOBBY;
+    }
+    
+    @Override
+    public HashSet<TeamType> getTeamTypes() {
+        HashSet<TeamType> types = new HashSet<TeamType>();
+        types.add(TeamType.SOLO);
+        return types;
+    }
+
+    @Override
+    public HashSet<ItemStack> getStartingItems() {
+        return new HashSet<ItemStack>();
     }
 }

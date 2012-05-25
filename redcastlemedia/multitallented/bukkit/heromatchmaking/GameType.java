@@ -18,5 +18,6 @@ public enum GameType {
     CTF,
     DOMINATION,
     TDM,
-    ASSAULT
+    ASSAULT,
+    LOBBY
 }

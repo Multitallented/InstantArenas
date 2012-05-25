@@ -16,5 +16,6 @@ public enum TeamType {
     FOUR_FFA,
     THREE_V_THREE,
     MOSH_PIT,
-    BIG_TEAM
+    BIG_TEAM,
+    SOLO
 }
