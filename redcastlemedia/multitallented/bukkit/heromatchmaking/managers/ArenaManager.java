@@ -123,10 +123,12 @@ public class ArenaManager {
         Hero hero = null;
         if (previousLocation.containsKey(p)) {
             p.teleport(previousLocation.get(p));
+            previousLocation.remove(p);
         }
         if (previousClass.containsKey(p)) {
             hero = ((Heroes) Controller.getInstance("heroes")).getCharacterManager().getHero(p);
             hero.changeHeroClass(previousClass.get(p), false);
+            previousClass.remove(p);
         }
         if (previousHealth.containsKey(p)) {
             if (hero != null) {
@@ -134,15 +136,19 @@ public class ArenaManager {
             } else {
                 p.setHealth(previousHealth.get(p));
             }
+            previousHealth.remove(p);
         }
         if (previousExp.containsKey(p)) {
             p.setExp(previousExp.get(p));
+            previousExp.remove(p);
         }
         if (previousFood.containsKey(p)) {
             p.setFoodLevel(previousFood.get(p));
+            previousFood.remove(p);
         }
         if (previousMana.containsKey(p)) {
             hero.setMana(previousMana.get(p));
+            previousMana.remove(p);
         }
         PlayerInventory pInv = p.getInventory();
         pInv.clear();
@@ -165,6 +171,7 @@ public class ArenaManager {
                 pInv.addItem(inv.get(k));
             }
         }
+        previousInventory.remove(p);
     }
     
     public void checkEndMatch(Player p) {
@@ -334,7 +341,9 @@ public class ArenaManager {
 
     public void playerRespawned(PlayerRespawnEvent event) {
         Player p = event.getPlayer();
-        event.setRespawnLocation(previousLocation.get(p));
+        if (previousLocation.containsKey(p)) {
+            event.setRespawnLocation(previousLocation.get(p));
+        }
         PlayerInventory pInv = p.getInventory();
         pInv.clear();
         ArrayList<ItemStack> inv = previousInventory.get(p);
@@ -355,12 +364,14 @@ public class ArenaManager {
                 pInv.addItem(inv.get(k));
             }
         }
+        previousInventory.remove(p);
         Hero hero = null;
         if (previousClass.containsKey(p)) {
             hero = ((Heroes) Controller.getInstance("heroes")).getCharacterManager().getHero(p);
             if (hero != null) {
                 hero.changeHeroClass(previousClass.get(p), false);
             }
+            previousClass.remove(p);
         }
         if (previousHealth.containsKey(p)) {
             if (hero != null) {
@@ -368,15 +379,19 @@ public class ArenaManager {
             } else {
                 p.setHealth(previousHealth.get(p));
             }
+            previousHealth.remove(p);
         }
         if (previousExp.containsKey(p)) {
             p.setExp(previousExp.get(p));
+            previousExp.remove(p);
         }
         if (previousFood.containsKey(p)) {
             p.setFoodLevel(previousFood.get(p));
+            previousFood.remove(p);
         }
         if (previousMana.containsKey(p)) {
             hero.setMana(previousMana.get(p));
+            previousMana.remove(p);
         }
     }
 }

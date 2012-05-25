@@ -45,6 +45,7 @@ public class DeathListener implements Listener {
         }
         ArenaManager am = (ArenaManager) Controller.getInstance("arenamanager");
         am.playerRespawned(event);
+        pm.removeRespawningPlayer(event.getPlayer());
     }
     
     @EventHandler
