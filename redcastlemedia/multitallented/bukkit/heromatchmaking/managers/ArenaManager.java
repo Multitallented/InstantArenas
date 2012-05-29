@@ -27,6 +27,7 @@ import org.parts.redcastlemedia.multitallented.controllers.Controller;
 import org.parts.redcastlemedia.multitallented.models.YMLProxy;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.builders.ArenaBuilder;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.builders.RTSArenaBuilder;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.builders.SpleefArenaBuilder;
 
 /**
  *
@@ -43,6 +44,7 @@ public class ArenaManager {
     private HashMap<Player, Integer> previousFood = new HashMap<Player, Integer>();
     private HashMap<Player, Float> previousExp = new HashMap<Player, Float>();
     private HashMap<Player, Integer> previousMana = new HashMap<Player, Integer>();
+    private HashSet<ArenaBuilder> arenasAvailable = new HashSet<ArenaBuilder>();
     
     public ArenaManager() {
         YMLProxy config = (YMLProxy) Controller.getInstance("config");
@@ -58,6 +60,11 @@ public class ArenaManager {
           log.info("[HeroMatchMaking] Using " + worldName + " for instanced matches.");
           log.warning("[HeroMatchMaking] Make sure there is nothing valuable in " + worldName);
         }
+        
+        //Init arenasAvailable
+        arenasAvailable.add(new RTSArenaBuilder());
+        arenasAvailable.add(new SpleefArenaBuilder());
+        
     }
     
     public ArenaBuilder getExistingArena(Player p) {

@@ -5,6 +5,7 @@
 
 package redcastlemedia.multitallented.bukkit.heromatchmaking;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -15,6 +16,10 @@ public class PlayerPreferences {
     private HashSet<GameType> arenas = new HashSet<GameType>();
     private HashSet<TeamType> teams = new HashSet<TeamType>();
     
+    public PlayerPreferences() {
+        arenas.addAll(Arrays.asList(GameType.values()));
+        teams.addAll(Arrays.asList(TeamType.values()));
+    }
     
     public boolean setGamePreference(GameType type) {
         if (arenas.contains(type)) {
@@ -34,6 +39,14 @@ public class PlayerPreferences {
             teams.add(type);
             return true;
         }
+    }
+    
+    public HashSet<GameType> getGameTypes() {
+        return arenas;
+    }
+    
+    public HashSet<TeamType> getTeamTypes() {
+        return teams;
     }
     
 }

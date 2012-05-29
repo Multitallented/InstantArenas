@@ -56,6 +56,7 @@ public class QueueCommand implements HCommand {
 
                 ArenaManager am = (ArenaManager) Controller.getInstance("arenamanager");
                 while (readyPlayers != null) {
+                    //TODO return this as a set of hashsets of players
                     
                     ArenaBuilder arena = new RTSArenaBuilder();
                     am.setLocation(arena);

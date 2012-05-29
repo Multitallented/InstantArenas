@@ -7,7 +7,9 @@ package redcastlemedia.multitallented.bukkit.heromatchmaking.managers;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.bukkit.entity.Player;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.GameType;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.PlayerPreferences;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.TeamType;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.builders.ArenaBuilder;
 
 /**
@@ -19,6 +21,8 @@ public class PlayerManager {
     private HashSet<Player> queuingPlayers = new HashSet<Player>();
     private HashSet<Player> respawningPlayers = new HashSet<Player>();
     private HashMap<Player, PlayerPreferences> preferences = new HashMap<Player, PlayerPreferences>();
+    private HashMap<GameType, Player> gamePref = new HashMap<GameType, Player>();
+    private HashMap<TeamType, Player> teamPref = new HashMap<TeamType, Player>();
     
     public ArenaBuilder getPlayerLocation(Player p) {
         return playerLocations.get(p);
@@ -77,11 +81,13 @@ public class PlayerManager {
             HashSet<Player> tempSet = new HashSet<Player>();
             int i = 0;
             for (Player p : queuingPlayers) {
-                tempSet.add(p);
-                i++;
-                if (i > 1) {
-                    return tempSet;
+                
+                PlayerPreferences pref = preferences.get(p);
+                for (GameType type : pref.getGameTypes()) {
+                    
                 }
+                
+                
             }
             return null;
         } else {
