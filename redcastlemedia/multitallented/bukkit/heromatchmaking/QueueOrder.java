@@ -78,14 +78,14 @@ public class QueueOrder {
             @Override
             public void run() {
                 boolean isCanceled = false;
-		for (User u : theMatch.getRawPlayers()) {
+                for (User u : theMatch.getRawPlayers()) {
                     Player p = u.getPlayer();
                     if (!p.isOnline() || p.isDead()) {
                         isCanceled = true;
                         break;
                     }
-		}
-		if (isCanceled) {
+                }
+                if (isCanceled) {
                     for (User u : theMatch.getRawPlayers()) {
                         Player p = u.getPlayer();
                         if (p.isOnline() && !p.isDead()) {
@@ -94,17 +94,16 @@ public class QueueOrder {
                         }
                     }
                     return;
-		}
-		for (User u : theMatch.getRawPlayers()) {
+                }
+                for (User u : theMatch.getRawPlayers()) {
                     controller.getUserManager().saveUserPreviousState(u);
                     u.getPlayer().sendMessage(ChatColor.GOLD + HeroMatchMaking.NAME + " Starting match now!");
-                    u.setInMatch(true);
-		}
+                }
                 theMatch.getArena().build();
-		controller.getArenaManager().preparePlayers(theMatch); //sets inventory, health, class, etc. and teleports them
+                controller.getMatchManager().clearDroppedItems(theMatch.getArena());
+                controller.getArenaManager().preparePlayers(theMatch); //sets inventory, health, class, etc. and teleports them
                 controller.getMatchManager().addMatch(theMatch);
             }
-            
         }, 100L);
     }
 }

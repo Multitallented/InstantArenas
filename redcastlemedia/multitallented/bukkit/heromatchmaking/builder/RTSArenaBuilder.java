@@ -154,16 +154,12 @@ public class RTSArenaBuilder extends Arena {
     
     @Override
     public HeroClass getHeroClass() {
-        if (HeroMatchMaking.heroes != null) {
-            return HeroMatchMaking.heroes.getClassManager().getClass("VClass");
-        } else {
-            return HeroMatchMaking.heroes.getClassManager().getClass("VProf");
-        }
+        return HeroMatchMaking.heroes.getClassManager().getClass("VanillaClass");
     }
     
     @Override
     public HeroClass getProf() {
-        return null;
+        return HeroMatchMaking.heroes.getClassManager().getClass("VanillaProf");
     }
 
 }

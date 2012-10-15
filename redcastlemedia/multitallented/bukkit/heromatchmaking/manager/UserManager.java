@@ -36,11 +36,17 @@ public class UserManager {
      * when they log in next time. It also erases their previous user
      * data.
      * @param u the User
-     * @param loggingOut set true if calling from onPlayerQuitEvent
+     * @param state the name event that caused this method to trigger
      */
-    public void restorePreviousUserState(final User u) {
-        if (!u.getPlayer().isOnline() || u.getPlayer().isDead()) {
+    public void restorePreviousUserState(final User u, String state) {
+        System.out.println("restore:" + state);
+        if (!state.equals("respawn") && !state.equals("join") &&
+            (!u.getPlayer().isOnline() || u.getPlayer().isDead())) {
             return;
+        }
+        long waitDuration = 0L;
+        if (state.equals("join")) {
+            waitDuration = 20L;
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(controller, new Runnable() {
             
@@ -52,19 +58,19 @@ public class UserManager {
                     p.teleport(u.getPreviousLocation());
                     u.setPreviousLocation(null);
                 }
-                
-                try {
-                    ArrayList<ItemStack> inventory = u.getPreviousInventory();
+                p.getInventory().clear();
+                ArrayList<ItemStack> inventory = u.getPreviousInventory();
+                System.out.println((inventory != null) + ":" + (inventory.size()));
+                if (inventory != null && inventory.size() > 3) {
                     p.getInventory().setHelmet(inventory.get(0));
                     p.getInventory().setChestplate(inventory.get(1));
                     p.getInventory().setLeggings(inventory.get(2));
                     p.getInventory().setBoots(inventory.get(3));
                     for (int i = 4; i<inventory.size(); i++) {
-                        p.getInventory().addItem(inventory.get(i));
+                        if (inventory.get(i) != null) {
+                            p.getInventory().addItem(inventory.get(i));
+                        }
                     }
-                } catch (Exception e) {
-                    String message = HeroMatchMaking.NAME + " failed to restore " + u.getName() + "'s inventory";
-                    logger.warning(message);
                 }
                 if (u.getPreviousStamina() > -1) {
                     p.setFoodLevel(u.getPreviousStamina());
@@ -98,22 +104,22 @@ public class UserManager {
                     u.setPreviousExp(0f);
                 }
             }
-        });
+        }, waitDuration);
         
     }
     
     public void saveUserPreviousState(User u) {
         Player p = u.getPlayer();
         Location l = p.getLocation();
-	u.setPreviousLocation(l.getWorld().getName() + ";" + l.getX() + ";" + l.getY() + ";" + l.getZ());
-	ArrayList<ItemStack> inventory = new ArrayList<>();
-	inventory.add(p.getInventory().getHelmet());
-	inventory.add(p.getInventory().getChestplate());
-	inventory.add(p.getInventory().getLeggings());
-	inventory.add(p.getInventory().getBoots());
+        u.setPreviousLocation(l.getWorld().getName() + ";" + l.getX() + ";" + l.getY() + ";" + l.getZ());
+        ArrayList<ItemStack> inventory = new ArrayList<>();
+        inventory.add(p.getInventory().getHelmet());
+        inventory.add(p.getInventory().getChestplate());
+        inventory.add(p.getInventory().getLeggings());
+        inventory.add(p.getInventory().getBoots());
         inventory.addAll(Arrays.asList(p.getInventory().getContents()));
-	u.setPreviousInventory(inventory);
-	u.setPreviousStamina(p.getFoodLevel());
+        u.setPreviousInventory(inventory);
+        u.setPreviousStamina(p.getFoodLevel());
         if (HeroMatchMaking.heroes != null) {
             Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
             u.setPreviousHP(h.getHealth());
@@ -124,8 +130,8 @@ public class UserManager {
             u.setPreviousHP(p.getHealth());
             u.setPreviousExp(p.getExp());
         }
-	
-	saveUserData(p.getName());
+
+        saveUserData(p.getName());
     }
     
     public void loadUserData(String name) {

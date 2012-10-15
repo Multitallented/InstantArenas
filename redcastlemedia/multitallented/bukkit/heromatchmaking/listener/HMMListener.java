@@ -1,12 +1,16 @@
 package redcastlemedia.multitallented.bukkit.heromatchmaking.listener;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.*;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.model.User;
 
 /**
  *
@@ -36,5 +40,25 @@ public class HMMListener implements Listener {
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         new RespawnOrder(controller, event.getPlayer());
+    }
+    
+    @EventHandler
+    public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+        if (event.getMessage().equals("/suicide")) {
+            return;
+        }
+        User u = controller.getUserManager().getUser(event.getPlayer().getName());
+        if (u.isInMatch()) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.RED + HeroMatchMaking.NAME + " You can't use commands while in a match!");
+        }
+    }
+    
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (controller.getUserManager().getUser(event.getPlayer().getName()).isInMatch()) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.RED + HeroMatchMaking.NAME + " You can't teleport while in a match!");
+        }
     }
 }

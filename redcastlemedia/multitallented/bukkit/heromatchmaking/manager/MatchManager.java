@@ -84,14 +84,13 @@ public class MatchManager {
     
     public void endMatch(Match m) {
         matches.remove(m);
-        clearDroppedItems(m.getArena());
         for (User u : m.getRawPlayers()) {
             u.setWins(u.getWins() + 1);
             if (HeroMatchMaking.econ != null) {
                 HeroMatchMaking.econ.depositPlayer(u.getName(), controller.getConfigManager().getWinnings());
             }
             u.setInMatch(false);
-            controller.getUserManager().restorePreviousUserState(u);
+            controller.getUserManager().restorePreviousUserState(u, "endmatch");
         }
     }
     
@@ -191,10 +190,12 @@ public class MatchManager {
             case BIG_TEAM:
                 int k = 1;
                 for (User u : tempMap.get(key)) {
-                    if (k > (tempMap.size() /2)) {
+                    if (k == 1) {
                         team2.add(u);
+                        k = 2;
                     } else {
                         team1.add(u);
+                        k = 1;
                     }
                     k++;
                 }

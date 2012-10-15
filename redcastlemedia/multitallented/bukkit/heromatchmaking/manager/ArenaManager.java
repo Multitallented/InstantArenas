@@ -2,7 +2,9 @@ package redcastlemedia.multitallented.bukkit.heromatchmaking.manager;
 
 import com.herocraftonline.heroes.characters.Hero;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.HeroMatchMaking;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.builder.LobbyArenaBuilder;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.builder.RTSArenaBuilder;
@@ -55,6 +57,7 @@ public class ArenaManager {
         Arena arena = match.getArena();
         ArrayList<User> users = match.getRawPlayers();
         for (User u : users) {
+            controller.getUserManager().saveUserPreviousState(u);
             Player p = u.getPlayer();
             p.getInventory().clear();
             p.getInventory().setHelmet(null);
@@ -93,11 +96,13 @@ public class ArenaManager {
             int k = 0;
             for (int i=0; i< match.getPlayers().get(0).size(); i++) {
                 match.getPlayers().get(0).get(i).getPlayer().teleport(arena.getStartPoint(k));
+                match.getPlayers().get(0).get(i).setInMatch(true);
                 k+=2;
             }
             k=1;
             for (int i=0; i< match.getPlayers().get(1).size(); i++) {
                 match.getPlayers().get(1).get(i).getPlayer().teleport(arena.getStartPoint(k));
+                match.getPlayers().get(1).get(i).setInMatch(true);
                 k+=2;
             }
         } catch (Exception e) {

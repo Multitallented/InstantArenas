@@ -18,7 +18,6 @@ public class QuitOrder {
             controller.getMatchManager().removeQueuingPlayer(player);
             return;
         }
-        um.restorePreviousUserState(u);
         //also ends the match if it should be ended
         controller.getMatchManager().checkEndMatch(u);
     }

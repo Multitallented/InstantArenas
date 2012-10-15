@@ -10,6 +10,6 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.model.User;
 public class RespawnOrder {
     public RespawnOrder(HeroMatchMaking controller, Player player) {
         User u = controller.getUserManager().getUser(player.getName());
-        controller.getUserManager().restorePreviousUserState(u);
+        controller.getUserManager().restorePreviousUserState(u, "respawn");
     }
 }
