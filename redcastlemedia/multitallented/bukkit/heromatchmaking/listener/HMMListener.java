@@ -93,49 +93,39 @@ public class HMMListener implements Listener {
         }
     }
 
-    /*@EventHandler
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event){
-        if(!event.isCancelled() && event.getClickedBlock().equals(Material.LEVER)){
-            Lever lever = (Lever)event.getClickedBlock();
-            if(event.getClickedBlock().getRelative(0, 1, 0).equals(Material.SIGN)){
-                Sign sign = (Sign)event.getClickedBlock().getRelative(0, 1, 0);
+        if(!event.isCancelled() && event.getClickedBlock().getType().equals(Material.LEVER)){
+            if (event.getClickedBlock().getRelative(0, 1, 0).getType().equals(Material.SIGN)){
+                Sign sign = (Sign) event.getClickedBlock().getRelative(0, 1, 0).getState();
                 String type = sign.getLine(1);
-                GameType gType = null;
-                TeamType tType = null;
-                if(lever.isPowered()) return;*/
-                /**
-                 * I figured it would be better to do it this way instead of doing a
-                 * switch(type) because this way is easier to add stuff to the list
-                 * in case something needs to be added.
-                 */
-                /*if(
-                        type == "RTS" ||
-                        type == "SPLEEF" ||
-                        type == "VANILLA" ||
-                        type == "ANYTHING_GOES" ||
-                        type == "PITFALL" ||
-                        type == "CTF" ||
-                        type == "DOMINATION" ||
-                        type == "TDM" ||
-                        type == "ASSAULT"){
-                    gType = GameType.valueOf(type);
-                } else if(
-                        type == "ONE_V_ONE" ||
-                        type == "TWO_V_TWO" ||
-                        type == "THREE_FFA" ||
-                        type == "FOUR_FFA" ||
-                        type == "THREE_V_THREE" ||
-                        type == "MOSH_PIT" ||
-                        type == "BIG_TEAM" ||
-                        type == "SOLO"){
-                    tType = TeamType.valueOf(type);
+                for (GameType gt : GameType.values()) {
+                    if (gt.name().equalsIgnoreCase(type)) {
+                        User user = controller.getUserManager().getUser(event.getPlayer().getName());
+                        if (user.getGType().contains(gt)) {
+                            user.getGType().remove(gt);
+                            //TODO tell them it changed
+                        } else {
+                            user.getGType().add(gt);
+                            //TODO tell them it changed
+                        }
+                        return;
+                    }
                 }
-                /**
-                 * Ofc I still have to study how these Types are passed and interpreted
-                 * to the MatchManager. this is just the basic body for me to work on
-                 * tomorrow, when I have more time to actually study the code.
-                 */
-            /*}
+                for (TeamType tt : TeamType.values()) {
+                    if (tt.name().equalsIgnoreCase(type)) {
+                        User user = controller.getUserManager().getUser(event.getPlayer().getName());
+                        if (user.getTType().contains(tt)) {
+                            user.getTType().remove(tt);
+                            //TODO tell them it changed
+                        } else {
+                            user.getTType().add(tt);
+                            //TODO tell them it changed
+                        }
+                        return;
+                    }
+                }
+            }
         }
-    }*/
+    }
 }
