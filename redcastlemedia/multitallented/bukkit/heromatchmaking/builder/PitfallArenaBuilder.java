@@ -4,6 +4,7 @@ import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.classes.HeroClass;
 import java.util.ArrayList;
 import java.util.HashSet;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -114,23 +115,21 @@ public class PitfallArenaBuilder extends Arena implements Listener {
         super.loadChunks();
         Location loc = super.getLocation();
         Location l = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
-        World world = l.getWorld();
-        int x0 = (int) l.getX();
-        int y0 = (int) l.getY();
-        int z0 = (int) l.getZ();
+        final World world = l.getWorld();
+        final int x0 = (int) l.getX();
+        final int y0 = (int) l.getY();
+        final int z0 = (int) l.getZ();
         
         for (int x=0; x<21;x++) {
-            for (int y=0; y<100; y++) {
+            for (int y=0; y<21; y++) {
                 for (int z=0; z<21; z++) {
                     Material mat = Material.AIR;
-                    if (y == 0 || y == 99 || x == 0 || x==20 || z==0 || z==20) {
+                    if (y == 0 || x == 0 || x==20 || z==0 || z==20) {
                         mat = Material.BEDROCK;
                     } else if (y == 1) {
                         mat = Material.STATIONARY_LAVA;
                     } else if (y < 91) {
                         mat = Material.LEAVES;
-                    } else if (y == 98) {
-                        mat = Material.GLOWSTONE;
                     }
                     
                     
@@ -138,6 +137,88 @@ public class PitfallArenaBuilder extends Arena implements Listener {
                 }
             }
         }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
+            
+            public void run() {
+                for (int x=0; x<21;x++) {
+                    for (int y=21; y<42; y++) {
+                        for (int z=0; z<21; z++) {
+                            Material mat = Material.AIR;
+                            if (x == 0 || x==20 || z==0 || z==20) {
+                                mat = Material.BEDROCK;
+                            } else if (y < 91) {
+                                mat = Material.LEAVES;
+                            }
+
+
+                            world.getBlockAt(x0 + x, y0 + y, z0 + z).setType(mat);
+                        }
+                    }
+                }
+            }
+        },1L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
+            
+            public void run() {
+                for (int x=0; x<21;x++) {
+                    for (int y=42; y<63; y++) {
+                        for (int z=0; z<21; z++) {
+                            Material mat = Material.AIR;
+                            if (x == 0 || x==20 || z==0 || z==20) {
+                                mat = Material.BEDROCK;
+                            } else if (y < 91) {
+                                mat = Material.LEAVES;
+                            }
+
+
+                            world.getBlockAt(x0 + x, y0 + y, z0 + z).setType(mat);
+                        }
+                    }
+                }
+            }
+        },2L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
+            
+            public void run() {
+                for (int x=0; x<21;x++) {
+                    for (int y=63; y<84; y++) {
+                        for (int z=0; z<21; z++) {
+                            Material mat = Material.AIR;
+                            if (x == 0 || x==20 || z==0 || z==20) {
+                                mat = Material.BEDROCK;
+                            } else if (y < 91) {
+                                mat = Material.LEAVES;
+                            }
+
+
+                            world.getBlockAt(x0 + x, y0 + y, z0 + z).setType(mat);
+                        }
+                    }
+                }
+            }
+        },3L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
+            
+            public void run() {
+                for (int x=0; x<21;x++) {
+                    for (int y=84; y<100; y++) {
+                        for (int z=0; z<21; z++) {
+                            Material mat = Material.AIR;
+                            if (y == 99 || x == 0 || x==20 || z==0 || z==20) {
+                                mat = Material.BEDROCK;
+                            } else if (y < 91) {
+                                mat = Material.LEAVES;
+                            } else if (y == 98) {
+                                mat = Material.GLOWSTONE;
+                            }
+
+
+                            world.getBlockAt(x0 + x, y0 + y, z0 + z).setType(mat);
+                        }
+                    }
+                }
+            }
+        },4L);
     }
 
     @Override
