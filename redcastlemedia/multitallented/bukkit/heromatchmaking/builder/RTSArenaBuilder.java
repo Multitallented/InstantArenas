@@ -32,6 +32,16 @@ public class RTSArenaBuilder extends Arena {
     public GameType getGameType() {
         return GameType.RTS;
     }
+    
+    @Override
+    public boolean hasFriendlyFire() {
+        return false;
+    }
+    
+    @Override
+    public boolean hasDamage() {
+        return true;
+    }
 
     @Override
     public ArrayList<ItemStack> getStartingItems() {

@@ -28,7 +28,6 @@ public class User {
     private HeroClass previousClass = null;
     private HeroClass previousProf = null;
     private int previousMana = 0;
-    private boolean isInMatch = false;
     
     public User(String name, int wins, int loses, List<GameType> gType, List<TeamType> tType, Player player) {
         this.name = name;
@@ -46,12 +45,6 @@ public class User {
         this.tType = tType;
         this.player = player;
         this.previousLocation = l;
-    }
-    public void setInMatch(boolean input) {
-        this.isInMatch = input;
-    }
-    public boolean isInMatch() {
-        return this.isInMatch;
     }
     public int getPreviousMana() {
         return this.previousMana;

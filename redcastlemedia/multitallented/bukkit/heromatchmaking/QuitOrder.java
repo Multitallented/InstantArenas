@@ -14,7 +14,7 @@ public class QuitOrder {
         um.saveUserData(player.getName());
         User u = um.getUser(player.getName());
         um.removeUser(u);
-        if (u == null || !u.isInMatch()) {
+        if (u == null || u.getMatch() == null) {
             controller.getMatchManager().removeQueuingPlayer(player);
             return;
         }

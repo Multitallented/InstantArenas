@@ -1,8 +1,10 @@
 package redcastlemedia.multitallented.bukkit.heromatchmaking.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -48,17 +50,23 @@ public class HMMListener implements Listener {
             return;
         }
         User u = controller.getUserManager().getUser(event.getPlayer().getName());
-        if (u.isInMatch()) {
+        if (u.getMatch() != null) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + HeroMatchMaking.NAME + " You can't use commands while in a match!");
         }
     }
     
     @EventHandler
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (controller.getUserManager().getUser(event.getPlayer().getName()).isInMatch()) {
+    public void onPlayerTeleport(final PlayerTeleportEvent event) {
+        final User user = controller.getUserManager().getUser(event.getPlayer().getName());
+        if (user.getMatch() != null) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + HeroMatchMaking.NAME + " You can't teleport while in a match!");
         }
+    }
+    
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        
     }
 }

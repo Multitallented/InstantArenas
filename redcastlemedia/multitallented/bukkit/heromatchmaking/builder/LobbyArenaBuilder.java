@@ -79,6 +79,16 @@ public class LobbyArenaBuilder extends Arena {
     }
 
     @Override
+    public boolean hasDamage() {
+        return false;
+    }
+    
+    @Override
+    public boolean hasFriendlyFire() {
+        return false;
+    }
+
+    @Override
     public Location getStartPoint(int i) {
         //TODO this
         return null;

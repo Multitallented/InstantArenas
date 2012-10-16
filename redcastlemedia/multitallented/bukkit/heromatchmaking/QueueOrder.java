@@ -30,10 +30,9 @@ public class QueueOrder {
             sender.sendMessage(ChatColor.RED + HeroMatchMaking.NAME + " You have left the queue.");
             return;
         }
-        
+
         Util.checkValidWorld(controller);
-        
-        
+
         User user = controller.getUserManager().getUser(player.getName());
         if (user == null) {
             Logger logger = Logger.getLogger("Minecraft");
@@ -52,7 +51,7 @@ public class QueueOrder {
         }
         Arena arena = null;
         Match match = null;
-	while (!tempMap.isEmpty()) {
+        while (!tempMap.isEmpty()) {
             match = controller.getMatchManager().selectRandomMatch(tempMap);
             tempMap.remove(match.getGType() + ":" + match.getTType());
             arena = controller.getArenaManager().getArena(match.getGType(), match.getTType());

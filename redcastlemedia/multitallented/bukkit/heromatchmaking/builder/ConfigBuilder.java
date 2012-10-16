@@ -12,7 +12,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class ConfigBuilder {
     public static FileConfiguration createNewConfigFile(File file) {
         try {
-            file.mkdirs();
             file.createNewFile();
         } catch (IOException ioe) {
             System.out.println("[HeroMatchMaking] failed to create new config.yml");

@@ -25,6 +25,10 @@ public abstract class Arena {
     
     public abstract int getSize();
     
+    public abstract boolean hasDamage();
+    
+    public abstract boolean hasFriendlyFire();
+    
     public abstract HeroClass getHeroClass();
     
     public abstract HeroClass getProf();

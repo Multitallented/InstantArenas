@@ -37,25 +37,23 @@ public class MatchManager {
     }
     
     public boolean checkEndMatch(User u) {
-        Match currentMatch = null;
-        outer: for (Match m : matches) {
-            for (ArrayList<User> tempList : m.getPlayers()) {
-                for (User us : tempList) {
-                    if (u.equals(us)) {
-                        currentMatch = m;
-                        break outer;
-                    }
-                }
-            }
-        }
-        if (currentMatch.getGType() == GameType.LOBBY) {
+        Match currentMatch = u.getMatch();
+        
+        if (currentMatch.getTType() == TeamType.SOLO) {
             matches.remove(currentMatch);
+            u.setMatch(null);
             return true;
         }
         currentMatch.getRawPlayers().remove(u);
+        u.setMatch(null);
+        u.setLoses(u.getLoses() + 1);
+        for (ArrayList<User> tempList : currentMatch.getPlayers()) {
+            if (tempList.contains(u)) {
+                tempList.remove(u);
+            }
+        }
         boolean endMatch = false;
         for (ArrayList<User> tempList : currentMatch.getPlayers()) {
-            tempList.remove(u);
             if (currentMatch.getPlayers().size() > 1 && tempList.isEmpty()) {
                 endMatch = true;
                 endMatch(currentMatch);
@@ -64,8 +62,6 @@ public class MatchManager {
                 endMatch = true;
             }
         }
-        u.setInMatch(false);
-        u.setLoses(u.getLoses() + 1);
         return endMatch;
     }
     
@@ -89,7 +85,7 @@ public class MatchManager {
             if (HeroMatchMaking.econ != null) {
                 HeroMatchMaking.econ.depositPlayer(u.getName(), controller.getConfigManager().getWinnings());
             }
-            u.setInMatch(false);
+            u.setMatch(null);
             controller.getUserManager().restorePreviousUserState(u, "endmatch");
         }
     }
@@ -146,6 +142,7 @@ public class MatchManager {
                     }
                     break;
                 case THREE_V_THREE:
+                case MOSH_PIT:
                     if (tempMap.get(s).size() < 5) {
                         removeLater.add(s);
                     }

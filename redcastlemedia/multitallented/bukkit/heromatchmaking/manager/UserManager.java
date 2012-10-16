@@ -39,14 +39,16 @@ public class UserManager {
      * @param state the name event that caused this method to trigger
      */
     public void restorePreviousUserState(final User u, String state) {
-        System.out.println("restore:" + state);
         if (!state.equals("respawn") && !state.equals("join") &&
             (!u.getPlayer().isOnline() || u.getPlayer().isDead())) {
             return;
         }
+        if (u.getPreviousLocation() == null) {
+            return;
+        }
         long waitDuration = 0L;
         if (state.equals("join")) {
-            waitDuration = 20L;
+            waitDuration = 1L;
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(controller, new Runnable() {
             
@@ -58,10 +60,9 @@ public class UserManager {
                     p.teleport(u.getPreviousLocation());
                     u.setPreviousLocation(null);
                 }
-                p.getInventory().clear();
                 ArrayList<ItemStack> inventory = u.getPreviousInventory();
-                System.out.println((inventory != null) + ":" + (inventory.size()));
                 if (inventory != null && inventory.size() > 3) {
+                    p.getInventory().clear();
                     p.getInventory().setHelmet(inventory.get(0));
                     p.getInventory().setChestplate(inventory.get(1));
                     p.getInventory().setLeggings(inventory.get(2));

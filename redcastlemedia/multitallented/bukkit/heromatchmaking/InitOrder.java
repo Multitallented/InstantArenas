@@ -44,6 +44,9 @@ public class InitOrder {
     
     private FileConfiguration loadConfig() {
         File configFile = new File(controller.getDataFolder(), "config.yml");
+        if (!controller.getDataFolder().exists()) {
+            controller.getDataFolder().mkdir();
+        }
         FileConfiguration config;
         if (!configFile.exists()) {
             config = ConfigBuilder.createNewConfigFile(configFile);

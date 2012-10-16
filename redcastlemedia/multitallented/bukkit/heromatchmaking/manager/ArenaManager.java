@@ -2,12 +2,14 @@ package redcastlemedia.multitallented.bukkit.heromatchmaking.manager;
 
 import com.herocraftonline.heroes.characters.Hero;
 import java.util.ArrayList;
-import java.util.Arrays;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.HeroMatchMaking;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.builder.LobbyArenaBuilder;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.builder.PitfallArenaBuilder;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.builder.RTSArenaBuilder;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.builder.SpleefArenaBuilder;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.*;
 
 /**
@@ -36,7 +38,15 @@ public class ArenaManager {
                         return null;
                 }
             case PITFALL:
-                return null;
+                switch(tType) {
+                    case ONE_V_ONE:
+                    case THREE_FFA:
+                    case FOUR_FFA:
+                    case MOSH_PIT:
+                        return new PitfallArenaBuilder();
+                    default:
+                        return null;
+                }
             case RTS:
                 switch(tType) {
                     case TWO_V_TWO:
@@ -46,6 +56,15 @@ public class ArenaManager {
                         return null;
                 }
             case SPLEEF:
+                switch(tType) {
+                    case ONE_V_ONE:
+                    case THREE_FFA:
+                    case FOUR_FFA:
+                    case MOSH_PIT:
+                        return new SpleefArenaBuilder();
+                    default:
+                        return null;
+                }
             case TDM:
             case VANILLA:
                 return null;
@@ -79,12 +98,28 @@ public class ArenaManager {
             if (HeroMatchMaking.heroes != null) {
                 Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
                 h.setHealth(h.getMaxHealth());
+                h.syncHealth();
                 h.setMana(h.getMaxMana());
                 if (arena.getHeroClass() != null) {
                     h.setHeroClass(arena.getHeroClass(), false);
                 }
                 if (arena.getProf() != null) {
                     h.setHeroClass(arena.getProf(), true);
+                }
+            } else {
+                p.setHealth(20);
+                p.setExp(0f);
+            }
+        }
+        if (match.getPlayers().size() == 2) {
+            for (User u : match.getPlayers().get(0)) {
+                if (u.getPlayer().getInventory().getHelmet() == null) {
+                    u.getPlayer().getInventory().setHelmet(new ItemStack(Material.WOOL, 1, (short) 11));
+                }
+            }
+            for (User u : match.getPlayers().get(1)) {
+                if (u.getPlayer().getInventory().getHelmet() == null) {
+                    u.getPlayer().getInventory().setHelmet(new ItemStack(Material.WOOL, 1, (short) 14));
                 }
             }
         }
@@ -96,13 +131,13 @@ public class ArenaManager {
             int k = 0;
             for (int i=0; i< match.getPlayers().get(0).size(); i++) {
                 match.getPlayers().get(0).get(i).getPlayer().teleport(arena.getStartPoint(k));
-                match.getPlayers().get(0).get(i).setInMatch(true);
+                match.getPlayers().get(0).get(i).setMatch(match);
                 k+=2;
             }
             k=1;
             for (int i=0; i< match.getPlayers().get(1).size(); i++) {
                 match.getPlayers().get(1).get(i).getPlayer().teleport(arena.getStartPoint(k));
-                match.getPlayers().get(1).get(i).setInMatch(true);
+                match.getPlayers().get(1).get(i).setMatch(match);
                 k+=2;
             }
         } catch (Exception e) {

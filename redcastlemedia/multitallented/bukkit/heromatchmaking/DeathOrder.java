@@ -13,7 +13,7 @@ public class DeathOrder {
         UserManager um = controller.getUserManager();
         um.saveUserData(p.getName());
         User u = controller.getUserManager().getUser(p.getName());
-        if (!u.isInMatch()) {
+        if (u.getMatch() == null) {
             controller.getMatchManager().removeQueuingPlayer(p);
             return;
         }
