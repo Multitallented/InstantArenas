@@ -72,6 +72,9 @@ public class QueueOrder {
         }
         match.setArena(arena);
         final Match theMatch = match;
+        controller.getMatchManager().addMatch(theMatch);
+        theMatch.getArena().build();
+        controller.getMatchManager().clearDroppedItems(theMatch.getArena());
         Bukkit.getScheduler().scheduleSyncDelayedTask(controller, new Runnable() {
             
             @Override
@@ -85,6 +88,7 @@ public class QueueOrder {
                     }
                 }
                 if (isCanceled) {
+                    controller.getMatchManager().removeMatch(theMatch);
                     for (User u : theMatch.getRawPlayers()) {
                         Player p = u.getPlayer();
                         if (p.isOnline() && !p.isDead()) {
@@ -98,10 +102,7 @@ public class QueueOrder {
                     controller.getUserManager().saveUserPreviousState(u);
                     u.getPlayer().sendMessage(ChatColor.GOLD + HeroMatchMaking.NAME + " Starting match now!");
                 }
-                theMatch.getArena().build();
-                controller.getMatchManager().clearDroppedItems(theMatch.getArena());
                 controller.getArenaManager().preparePlayers(theMatch); //sets inventory, health, class, etc. and teleports them
-                controller.getMatchManager().addMatch(theMatch);
             }
         }, 100L);
     }

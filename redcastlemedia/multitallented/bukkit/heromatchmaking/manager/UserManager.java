@@ -50,7 +50,11 @@ public class UserManager {
                 Player p = u.getPlayer();
                 p.setFireTicks(1);
                 if (u.getPreviousLocation() != null) {
-                    p.teleport(u.getPreviousLocation());
+                    Location prevLocation = u.getPreviousLocation();
+                    if (!prevLocation.getChunk().isLoaded()) {
+                        prevLocation.getChunk().load(true);
+                    }
+                    p.teleport(prevLocation);
                     u.setPreviousLocation(null);
                 }
                 ArrayList<ItemStack> inventory = u.getPreviousInventory();
