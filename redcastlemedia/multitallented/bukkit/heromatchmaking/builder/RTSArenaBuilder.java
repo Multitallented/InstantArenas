@@ -19,7 +19,11 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.model.TeamType;
  * @author Multitallented
  */
 public class RTSArenaBuilder extends Arena {
-
+    public RTSArenaBuilder(HeroMatchMaking hmm) {
+        super(hmm);
+    }
+    
+    
     @Override
     public HashSet<TeamType> getTeamTypes() {
         HashSet<TeamType> types = new HashSet<>();
@@ -65,6 +69,7 @@ public class RTSArenaBuilder extends Arena {
 
     @Override
     public void build() {
+        super.loadChunks();
         Location loc = super.getLocation();
         Location l = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
         World world = l.getWorld();
@@ -98,7 +103,8 @@ public class RTSArenaBuilder extends Arena {
                     }
                     
                     
-                    world.getBlockAt(x0 + x, y0 + y, z0 + z).setType(mat);
+                    
+                    world.getBlockAt(x0 + x, y0 + y, z0 + z).setTypeId(mat.getId(), false);
                 }
             }
         }

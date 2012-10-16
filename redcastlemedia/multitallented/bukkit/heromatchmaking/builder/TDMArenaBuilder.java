@@ -20,6 +20,9 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.model.TeamType;
  * @author Multitallented
  */
 public class TDMArenaBuilder extends Arena implements Listener {
+    public TDMArenaBuilder(HeroMatchMaking hmm) {
+        super(hmm);
+    }
 
     @Override
     public HashSet<TeamType> getTeamTypes() {
@@ -81,6 +84,7 @@ public class TDMArenaBuilder extends Arena implements Listener {
 
     @Override
     public void build() {
+        super.loadChunks();
         Location loc = super.getLocation();
         Location l = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
         World world = l.getWorld();

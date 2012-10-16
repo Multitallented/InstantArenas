@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.HeroMatchMaking;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.Arena;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.GameType;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.TeamType;
@@ -16,6 +17,9 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.model.TeamType;
  * @author Multitallented
  */
 public class LobbyArenaBuilder extends Arena {
+    public LobbyArenaBuilder(HeroMatchMaking hmm) {
+        super(hmm);
+    }
 
     @Override
     public boolean isAnythingGoes() {
@@ -34,6 +38,7 @@ public class LobbyArenaBuilder extends Arena {
     
     @Override
     public void build() {
+        super.loadChunks();
         Location loc = super.getLocation();
         //TODO do this part
         World world = loc.getWorld();

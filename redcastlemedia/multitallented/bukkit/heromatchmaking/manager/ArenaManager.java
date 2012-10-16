@@ -2,6 +2,7 @@ package redcastlemedia.multitallented.bukkit.heromatchmaking.manager;
 
 import com.herocraftonline.heroes.characters.Hero;
 import java.util.ArrayList;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +34,7 @@ public class ArenaManager {
             case LOBBY:
                 switch(tType) {
                     case SOLO:
-                        return new LobbyArenaBuilder();
+                        return new LobbyArenaBuilder(controller);
                     default:
                         return null;
                 }
@@ -43,7 +44,9 @@ public class ArenaManager {
                     case THREE_FFA:
                     case FOUR_FFA:
                     case MOSH_PIT:
-                        return new PitfallArenaBuilder();
+                        PitfallArenaBuilder pf = new PitfallArenaBuilder(controller);
+                        Bukkit.getPluginManager().registerEvents(pf, controller);
+                        return pf;
                     default:
                         return null;
                 }
@@ -51,7 +54,7 @@ public class ArenaManager {
                 switch(tType) {
                     case TWO_V_TWO:
                     case ONE_V_ONE:
-                        return new RTSArenaBuilder();
+                        return new RTSArenaBuilder(controller);
                     default:
                         return null;
                 }
@@ -61,7 +64,7 @@ public class ArenaManager {
                     case THREE_FFA:
                     case FOUR_FFA:
                     case MOSH_PIT:
-                        return new SpleefArenaBuilder();
+                        return new SpleefArenaBuilder(controller);
                     default:
                         return null;
                 }

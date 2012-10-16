@@ -17,6 +17,9 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.model.TeamType;
  * @author Multitallented
  */
 public class SpleefArenaBuilder extends Arena {
+    public SpleefArenaBuilder(HeroMatchMaking hmm) {
+        super(hmm);
+    }
 
     @Override
     public HashSet<TeamType> getTeamTypes() {
@@ -71,6 +74,7 @@ public class SpleefArenaBuilder extends Arena {
 
     @Override
     public void build() {
+        super.loadChunks();
         Location loc = super.getLocation();
         Location l = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
         World world = l.getWorld();

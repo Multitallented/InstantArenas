@@ -1,23 +1,65 @@
 package redcastlemedia.multitallented.bukkit.heromatchmaking.builder;
 
+import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.classes.HeroClass;
 import java.util.ArrayList;
 import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.HeroMatchMaking;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.Arena;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.GameType;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.TeamType;
+import redcastlemedia.multitallented.bukkit.heromatchmaking.model.User;
 
 /**
  *
  * @author Multitallented
  */
-public class PitfallArenaBuilder extends Arena {
+public class PitfallArenaBuilder extends Arena implements Listener {
+    
+    public PitfallArenaBuilder(HeroMatchMaking controller) {
+        super(controller);
+    }
 
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player p = event.getPlayer();
+        ItemStack is = p.getItemInHand();
+        int hp = 0;
+        switch (is.getType()) {
+            case SAPLING:
+                hp = 1;
+                break;
+            case APPLE:
+                hp = 2;
+                break;
+            default:
+                return;
+        }
+        User u = getPlugin().getUserManager().getUser(p.getName());
+        if (u.getMatch() == null || !(u.getMatch().getArena() instanceof PitfallArenaBuilder)) {
+            return;
+        }
+        if (is.getAmount() == 1) {
+            p.getInventory().removeItem(is);
+        } else {
+            is.setAmount(is.getAmount());
+        }
+        if (HeroMatchMaking.heroes == null) {
+            p.setHealth(p.getHealth() + hp);
+        } else {
+            Hero hero = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
+            hero.setHealth(hp + hero.getHealth());
+        }
+    }
+    
     @Override
     public HashSet<TeamType> getTeamTypes() {
         HashSet<TeamType> types = new HashSet<>();
@@ -70,6 +112,7 @@ public class PitfallArenaBuilder extends Arena {
 
     @Override
     public void build() {
+        super.loadChunks();
         Location loc = super.getLocation();
         Location l = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
         World world = l.getWorld();
