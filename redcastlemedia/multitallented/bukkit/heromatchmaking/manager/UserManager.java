@@ -38,17 +38,9 @@ public class UserManager {
      * @param u the User
      * @param state the name event that caused this method to trigger
      */
-    public void restorePreviousUserState(final User u, String state) {
-        if (!state.equals("respawn") && !state.equals("join") &&
-            (!u.getPlayer().isOnline() || u.getPlayer().isDead())) {
-            return;
-        }
+    public void restorePreviousUserState(final User u) {
         if (u.getPreviousLocation() == null) {
             return;
-        }
-        long waitDuration = 0L;
-        if (state.equals("join")) {
-            waitDuration = 1L;
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(controller, new Runnable() {
             
@@ -56,6 +48,7 @@ public class UserManager {
             public void run() {
                 Logger logger = Logger.getLogger("Minecraft");
                 Player p = u.getPlayer();
+                p.setFireTicks(1);
                 if (u.getPreviousLocation() != null) {
                     p.teleport(u.getPreviousLocation());
                     u.setPreviousLocation(null);
@@ -80,7 +73,10 @@ public class UserManager {
                     Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
                     if (u.getPreviousHP() > 0) {
                         h.setHealth(u.getPreviousHP());
+                    } else {
+                        h.setHealth(h.getMaxHealth());
                     }
+                    h.syncHealth();
                     u.setPreviousHP(0);
                     if (u.getPreviousMana() > 0) {
                         h.setMana(u.getPreviousMana());
@@ -97,6 +93,8 @@ public class UserManager {
                 } else {
                     if (u.getPreviousHP() > 0) {
                         p.setHealth(u.getPreviousHP());
+                    } else {
+                        p.setHealth(20);
                     }
                     u.setPreviousHP(0);
                     if (u.getPreviousExp() > 0) {
@@ -105,7 +103,7 @@ public class UserManager {
                     u.setPreviousExp(0f);
                 }
             }
-        }, waitDuration);
+        });
         
     }
     

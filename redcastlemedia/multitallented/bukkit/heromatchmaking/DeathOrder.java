@@ -17,7 +17,7 @@ public class DeathOrder {
             controller.getMatchManager().removeQueuingPlayer(p);
             return;
         }
-        um.restorePreviousUserState(u, "death");
+        um.restorePreviousUserState(u);
         //also ends the match if it should be ended
         controller.getMatchManager().checkEndMatch(u);
     }

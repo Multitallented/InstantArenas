@@ -28,17 +28,23 @@ public class PitfallArenaBuilder extends Arena implements Listener {
         super(controller);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player p = event.getPlayer();
+        if (p.getHealth() > 19) {
+            return;
+        }
         ItemStack is = p.getItemInHand();
-        int hp = 0;
+        int hp;
+        ItemStack iss;
         switch (is.getType()) {
             case SAPLING:
                 hp = 1;
+                iss=new ItemStack(Material.SAPLING, 1);
                 break;
             case APPLE:
                 hp = 2;
+                iss=new ItemStack(Material.APPLE, 1);
                 break;
             default:
                 return;
@@ -47,16 +53,14 @@ public class PitfallArenaBuilder extends Arena implements Listener {
         if (u.getMatch() == null || !(u.getMatch().getArena() instanceof PitfallArenaBuilder)) {
             return;
         }
-        if (is.getAmount() == 1) {
-            p.getInventory().removeItem(is);
-        } else {
-            is.setAmount(is.getAmount());
-        }
+        p.getInventory().removeItem(iss);
+        p.updateInventory();
         if (HeroMatchMaking.heroes == null) {
             p.setHealth(p.getHealth() + hp);
         } else {
             Hero hero = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
             hero.setHealth(hp + hero.getHealth());
+            hero.syncHealth();
         }
     }
     
@@ -92,22 +96,17 @@ public class PitfallArenaBuilder extends Arena implements Listener {
 
     @Override
     public boolean hasDamage() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean hasFriendlyFire() {
-        return true;
+        return false;
     }
 
     @Override
     public ArrayList<ItemStack> getStartingItems() {
-        ArrayList<ItemStack> tempMap = new ArrayList<>();
-        tempMap.add(new ItemStack(Material.DIAMOND_HELMET, 1));
-        tempMap.add(new ItemStack(Material.DIAMOND_CHESTPLATE, 1));
-        tempMap.add(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
-        tempMap.add(new ItemStack(Material.DIAMOND_BOOTS, 1));
-        return tempMap;
+        return new ArrayList<>();
     }
 
     @Override

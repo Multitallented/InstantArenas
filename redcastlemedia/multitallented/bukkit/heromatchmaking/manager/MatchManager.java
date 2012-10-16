@@ -86,7 +86,7 @@ public class MatchManager {
                 HeroMatchMaking.econ.depositPlayer(u.getName(), controller.getConfigManager().getWinnings());
             }
             u.setMatch(null);
-            controller.getUserManager().restorePreviousUserState(u, "endmatch");
+            controller.getUserManager().restorePreviousUserState(u);
         }
     }
     
