@@ -95,37 +95,11 @@ public class HMMListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event){
-        if(!event.isCancelled() && event.getClickedBlock().getType().equals(Material.LEVER)){
-            if (event.getClickedBlock().getRelative(0, 1, 0).getType().equals(Material.SIGN)){
-                Sign sign = (Sign) event.getClickedBlock().getRelative(0, 1, 0).getState();
-                String type = sign.getLine(1);
-                for (GameType gt : GameType.values()) {
-                    if (gt.name().equalsIgnoreCase(type)) {
-                        User user = controller.getUserManager().getUser(event.getPlayer().getName());
-                        if (user.getGType().contains(gt)) {
-                            user.getGType().remove(gt);
-                            //TODO tell them it changed
-                        } else {
-                            user.getGType().add(gt);
-                            //TODO tell them it changed
-                        }
-                        return;
-                    }
-                }
-                for (TeamType tt : TeamType.values()) {
-                    if (tt.name().equalsIgnoreCase(type)) {
-                        User user = controller.getUserManager().getUser(event.getPlayer().getName());
-                        if (user.getTType().contains(tt)) {
-                            user.getTType().remove(tt);
-                            //TODO tell them it changed
-                        } else {
-                            user.getTType().add(tt);
-                            //TODO tell them it changed
-                        }
-                        return;
-                    }
-                }
-            }
+        if(!event.getClickedBlock().getType().equals(Material.LEVER) || !event.getClickedBlock().getRelative(0, 1, 0).getType().equals(Material.SIGN)){
+            return;
         }
+        Sign sign = (Sign) event.getClickedBlock().getRelative(0, 1, 0).getState();
+        String type = sign.getLine(1);
+        new PreferenceOrder(controller, event.getPlayer(), type);
     }
 }
