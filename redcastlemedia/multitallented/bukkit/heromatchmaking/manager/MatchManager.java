@@ -194,7 +194,6 @@ public class MatchManager {
                         team1.add(u);
                         k = 1;
                     }
-                    k++;
                 }
                 teams.add(team1);
                 teams.add(team2);

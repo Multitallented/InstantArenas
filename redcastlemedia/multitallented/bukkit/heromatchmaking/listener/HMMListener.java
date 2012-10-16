@@ -1,10 +1,16 @@
 package redcastlemedia.multitallented.bukkit.heromatchmaking.listener;
 
+import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -67,6 +73,6 @@ public class HMMListener implements Listener {
     
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        
+        new DamageOrder(controller, event);
     }
 }
