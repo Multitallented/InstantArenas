@@ -14,7 +14,7 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.model.User;
  */
 public class DamageOrder {
     public DamageOrder(HeroMatchMaking controller, EntityDamageEvent event) {
-        if (event.isCancelled() || !(event.getEntity() instanceof Player) ||
+        if (!(event.getEntity() instanceof Player) ||
                 !(event instanceof EntityDamageByEntityEvent)) {
             return;
         }

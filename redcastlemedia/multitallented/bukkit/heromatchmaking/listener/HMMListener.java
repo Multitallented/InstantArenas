@@ -1,16 +1,11 @@
 package redcastlemedia.multitallented.bukkit.heromatchmaking.listener;
 
-import java.util.ArrayList;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -50,7 +45,7 @@ public class HMMListener implements Listener {
         new RespawnOrder(controller, event.getPlayer());
     }
     
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         if (event.getMessage().equals("/suicide")) {
             return;
@@ -62,7 +57,7 @@ public class HMMListener implements Listener {
         }
     }
     
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerTeleport(final PlayerTeleportEvent event) {
         final User user = controller.getUserManager().getUser(event.getPlayer().getName());
         if (user.getMatch() != null) {
@@ -71,8 +66,24 @@ public class HMMListener implements Listener {
         }
     }
     
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         new DamageOrder(controller, event);
+    }
+    
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        User u = controller.getUserManager().getUser(event.getPlayer().getName());
+        if (u.getMatch() == null && !u.getMatch().getArena().canBuild()) {
+            event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+        User u = controller.getUserManager().getUser(event.getPlayer().getName());
+        if (u.getMatch() == null && !u.getMatch().getArena().canBuild()) {
+            event.setCancelled(true);
+        }
     }
 }

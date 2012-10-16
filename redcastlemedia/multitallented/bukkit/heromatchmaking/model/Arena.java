@@ -33,6 +33,12 @@ public abstract class Arena {
     
     public abstract HeroClass getProf();
     
+    public abstract boolean canBuild();
+    
+    public abstract int getLives();
+    
+    public abstract boolean isAnythingGoes();
+    
     public Location getLocation() {
         return l;
     }

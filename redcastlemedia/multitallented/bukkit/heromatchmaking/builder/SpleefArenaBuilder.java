@@ -27,6 +27,21 @@ public class SpleefArenaBuilder extends Arena {
         types.add(TeamType.MOSH_PIT);
         return types;
     }
+    
+    @Override
+    public boolean isAnythingGoes() {
+        return false;
+    }
+    
+    @Override
+    public int getLives() {
+        return 1;
+    }
+    
+    @Override
+    public boolean canBuild() {
+        return true;
+    }
 
     @Override
     public GameType getGameType() {

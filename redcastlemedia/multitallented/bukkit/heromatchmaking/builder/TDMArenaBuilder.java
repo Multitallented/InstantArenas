@@ -6,6 +6,9 @@ import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.HeroMatchMaking;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.Arena;
@@ -16,16 +19,21 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.model.TeamType;
  *
  * @author Multitallented
  */
-public class PitfallArenaBuilder extends Arena {
+public class TDMArenaBuilder extends Arena implements Listener {
 
     @Override
     public HashSet<TeamType> getTeamTypes() {
         HashSet<TeamType> types = new HashSet<>();
         types.add(TeamType.ONE_V_ONE);
-        types.add(TeamType.THREE_FFA);
-        types.add(TeamType.FOUR_FFA);
-        types.add(TeamType.MOSH_PIT);
+        types.add(TeamType.TWO_V_TWO);
+        types.add(TeamType.THREE_V_THREE);
+        types.add(TeamType.BIG_TEAM);
         return types;
+    }
+    
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        
     }
     
     @Override
@@ -35,36 +43,39 @@ public class PitfallArenaBuilder extends Arena {
     
     @Override
     public int getLives() {
-        return 1;
-    }
-
-    @Override
-    public boolean canBuild() {
-        return true;
+        return 999;
     }
     
     @Override
-    public GameType getGameType() {
-        return GameType.PITFALL;
+    public boolean canBuild() {
+        return false;
     }
 
+    @Override
+    public GameType getGameType() {
+        return GameType.TDM;
+    }
+    
+    @Override
+    public boolean hasFriendlyFire() {
+        return false;
+    }
+    
     @Override
     public boolean hasDamage() {
         return true;
     }
 
     @Override
-    public boolean hasFriendlyFire() {
-        return true;
-    }
-
-    @Override
     public ArrayList<ItemStack> getStartingItems() {
         ArrayList<ItemStack> tempMap = new ArrayList<>();
-        tempMap.add(new ItemStack(Material.DIAMOND_HELMET, 1));
-        tempMap.add(new ItemStack(Material.DIAMOND_CHESTPLATE, 1));
-        tempMap.add(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
-        tempMap.add(new ItemStack(Material.DIAMOND_BOOTS, 1));
+        tempMap.add(null);
+        tempMap.add(null);
+        tempMap.add(null);
+        tempMap.add(null);
+        tempMap.add(new ItemStack(Material.BOW, 1));
+        tempMap.add(new ItemStack(Material.DIAMOND_SWORD, 1));
+        tempMap.add(new ItemStack(Material.ARROW, 10));
         return tempMap;
     }
 
@@ -78,17 +89,15 @@ public class PitfallArenaBuilder extends Arena {
         int z0 = (int) l.getZ();
         
         for (int x=0; x<21;x++) {
-            for (int y=0; y<100; y++) {
+            for (int y=0; y<25; y++) {
                 for (int z=0; z<21; z++) {
                     Material mat = Material.AIR;
-                    if (y == 0 || y == 99 || x == 0 || x==20 || z==0 || z==20) {
+                    if (y == 0 || x == 0 || x==20 || z==0 || z==20) {
                         mat = Material.BEDROCK;
                     } else if (y == 1) {
-                        mat = Material.STATIONARY_LAVA;
-                    } else if (y < 91) {
-                        mat = Material.LEAVES;
-                    } else if (y == 98) {
                         mat = Material.GLOWSTONE;
+                    } else if (y == 24) {
+                        mat = Material.GLASS;
                     }
                     
                     
@@ -102,19 +111,19 @@ public class PitfallArenaBuilder extends Arena {
     public Location getStartPoint(int i) {
         Location l = super.getLocation();
         if (i==0) {
-            return new Location(l.getWorld(), l.getX() + 5, l.getY() + 91.5, l.getZ() + 5);
+            return new Location(l.getWorld(), l.getX() + 3, l.getY() + 2.5, l.getZ() + 3);
         } else if (i==1) {
-            return new Location(l.getWorld(), l.getX() + 15, l.getY() + 91.5, l.getZ() + 15);
+            return new Location(l.getWorld(), l.getX() + 9, l.getY() + 2.5, l.getZ() + 9);
         } else if (i==2) {
-            return new Location(l.getWorld(), l.getX() + 5, l.getY() + 91.5, l.getZ() + 15);
+            return new Location(l.getWorld(), l.getX() + 3, l.getY() + 2.5, l.getZ() + 9);
         } else if (i==3) {
-            return new Location(l.getWorld(), l.getX() + 15, l.getY() + 91.5, l.getZ() + 5);
+            return new Location(l.getWorld(), l.getX() + 9, l.getY() + 2.5, l.getZ() + 3);
         } else if (i==4) {
-            return new Location(l.getWorld(), l.getX() + 10, l.getY() + 91.5, l.getZ() + 5);
+            return new Location(l.getWorld(), l.getX() + 6, l.getY() + 2.5, l.getZ() + 3);
         } else if (i==5) {
-            return new Location(l.getWorld(), l.getX() + 10, l.getY() + 91.5, l.getZ() + 15);
+            return new Location(l.getWorld(), l.getX() + 6, l.getY() + 2.5, l.getZ() + 9);
         } else {
-            return new Location(l.getWorld(), l.getX() + 5, l.getY() + 91.5, l.getZ() + 5);
+            return new Location(l.getWorld(), l.getX() + 3, l.getY() + 2.5, l.getZ() + 3);
         }
     }
 

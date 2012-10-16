@@ -27,6 +27,21 @@ public class RTSArenaBuilder extends Arena {
         types.add(TeamType.TWO_V_TWO);
         return types;
     }
+    
+    @Override
+    public boolean isAnythingGoes() {
+        return false;
+    }
+    
+    @Override
+    public int getLives() {
+        return 1;
+    }
+    
+    @Override
+    public boolean canBuild() {
+        return true;
+    }
 
     @Override
     public GameType getGameType() {

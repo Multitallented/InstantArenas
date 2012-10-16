@@ -18,6 +18,21 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.model.TeamType;
 public class LobbyArenaBuilder extends Arena {
 
     @Override
+    public boolean isAnythingGoes() {
+        return false;
+    }
+    
+    @Override
+    public int getLives() {
+        return 1;
+    }
+    
+    @Override
+    public boolean canBuild() {
+        return false;
+    }
+    
+    @Override
     public void build() {
         Location loc = super.getLocation();
         //TODO do this part
