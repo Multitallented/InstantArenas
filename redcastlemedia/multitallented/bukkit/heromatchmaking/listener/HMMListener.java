@@ -15,10 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.material.Lever;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.*;
-import redcastlemedia.multitallented.bukkit.heromatchmaking.model.GameType;
-import redcastlemedia.multitallented.bukkit.heromatchmaking.model.TeamType;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.User;
 
 /**
@@ -95,7 +92,9 @@ public class HMMListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event){
-        if(!event.getClickedBlock().getType().equals(Material.LEVER) || !event.getClickedBlock().getRelative(0, 1, 0).getType().equals(Material.SIGN)){
+        if (event.getClickedBlock() == null ||
+                !event.getClickedBlock().getType().equals(Material.LEVER) ||
+                !event.getClickedBlock().getRelative(0, 1, 0).getType().equals(Material.SIGN)){
             return;
         }
         Sign sign = (Sign) event.getClickedBlock().getRelative(0, 1, 0).getState();
