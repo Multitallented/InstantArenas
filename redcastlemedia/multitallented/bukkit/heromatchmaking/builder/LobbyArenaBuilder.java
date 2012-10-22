@@ -3,14 +3,16 @@ package redcastlemedia.multitallented.bukkit.heromatchmaking.builder;
 import com.herocraftonline.heroes.characters.classes.HeroClass;
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Lever;
+import org.bukkit.material.Wool;
 
 import redcastlemedia.multitallented.bukkit.heromatchmaking.HeroMatchMaking;
 import redcastlemedia.multitallented.bukkit.heromatchmaking.model.Arena;
@@ -54,6 +56,7 @@ public class LobbyArenaBuilder extends Arena {
             for (int j=0; j<20; j++) {
                 for (int k=0; k<9; k++) {
                     Material mat = Material.AIR;
+                    byte data = 0;
                     if (k == 0 || k == 8 || i == 0 || i == 19 || j == 0 || j == 19) {
                         mat = Material.BEDROCK;
                     } else if(i == 1 || i == 18 || j == 1 || j == 18){
@@ -76,20 +79,23 @@ public class LobbyArenaBuilder extends Arena {
                     			mat = Material.WOOL; //while wool
                     		}
                     		if(((i > 7 && i < 12) && (j == 6 || j == 13)) || ((j > 7 && j < 12) && (i == 6 || i == 13))){
-                    			mat = Material.LAPIS_ORE; //temp
-                    			//mat = Material.WOOL; //blue wool
+                    		        mat = Material.WOOL; //blue wool
+                    		        data = 0xB;
                     		}
                     		if((i == 9 || i == 10) && (j == 9 || j == 10)){
                     			mat = Material.LAPIS_BLOCK;
                     		}
                     		if(mat == Material.AIR){
+                    		    mat = Material.SMOOTH_BRICK;
                     			double a = Math.random();
-                    			if(a < 0.75){
-                    				mat = Material.STONE; //normal stone brick
-                    			} else if(a < 0.9){
-                    				mat = Material.MOSSY_COBBLESTONE; //mossy stone brick
+                    			if(a < 0.7){
+                    			    //normal stone brick
+                    			} else if(a < 0.85){
+                    			    //mossy stone brick
+                    			    data = 0x1;
                     			} else {
-                    				mat = Material.COBBLESTONE; //cracked stone brick
+                    			    //cracked stone brick
+                    			    data = 0x2;
                     			}
                     		}
                     	} else {
@@ -113,33 +119,34 @@ public class LobbyArenaBuilder extends Arena {
                     	}
                     }
                     world.getBlockAt(x0 + i, y0 + k, z0 + j).setType(mat);
+                    world.getBlockAt(x0 + i, y0 + k, z0 + j).setData(data);
                 }
             }
         }
 
-        Material mat = Material.WOOL; //red wool
-        String type = "GAME_TYPE";
-        placeSwitch(world, x0 + 2, y0 + 2, z0 + 3, mat, BlockFace.SOUTH, type, "RTS");
-        placeSwitch(world, x0 + 2, y0 + 2, z0 + 6, mat, BlockFace.SOUTH, type, "SPLEEF");
-        placeSwitch(world, x0 + 2, y0 + 2, z0 + 9, mat, BlockFace.SOUTH, type, "VANILLA");
-        placeSwitch(world, x0 + 2, y0 + 2, z0 + 12, mat, BlockFace.SOUTH, type, "ANYTHING_GOES");
-        placeSwitch(world, x0 + 2, y0 + 2, z0 + 15, mat, BlockFace.SOUTH, type, "PITFALL");
-        placeSwitch(world, x0 + 4, y0 + 2, z0 + 17, mat, BlockFace.EAST, type, "CTF");
-        placeSwitch(world, x0 + 7, y0 + 2, z0 + 17, mat, BlockFace.EAST, type, "DOMINATION");
-        placeSwitch(world, x0 + 10, y0 + 2, z0 + 17, mat, BlockFace.EAST, type, "TDM");
-        placeSwitch(world, x0 + 13, y0 + 2, z0 + 17, mat, BlockFace.EAST, type, "ASSAULT");
-        placeSwitch(world, x0 + 16, y0 + 2, z0 + 17, mat, BlockFace.EAST, type, "CUSTOM");
+        DyeColor dc = DyeColor.RED; //red wool
+        String type = "Game Type";
+        placeSwitch(world, x0 + 2, y0 + 2, z0 + 3, dc, BlockFace.SOUTH, type, "RTS");
+        placeSwitch(world, x0 + 2, y0 + 2, z0 + 6, dc, BlockFace.SOUTH, type, "Spleef");
+        placeSwitch(world, x0 + 2, y0 + 2, z0 + 9, dc, BlockFace.SOUTH, type, "Vanilla");
+        placeSwitch(world, x0 + 2, y0 + 2, z0 + 12, dc, BlockFace.SOUTH, type, "Anything Goes");
+        placeSwitch(world, x0 + 2, y0 + 2, z0 + 15, dc, BlockFace.SOUTH, type, "Pitfall");
+        placeSwitch(world, x0 + 4, y0 + 2, z0 + 17, dc, BlockFace.EAST, type, "CTF");
+        placeSwitch(world, x0 + 7, y0 + 2, z0 + 17, dc, BlockFace.EAST, type, "Domination");
+        placeSwitch(world, x0 + 10, y0 + 2, z0 + 17, dc, BlockFace.EAST, type, "TDM");
+        placeSwitch(world, x0 + 13, y0 + 2, z0 + 17, dc, BlockFace.EAST, type, "Assault");
+        placeSwitch(world, x0 + 16, y0 + 2, z0 + 17, dc, BlockFace.EAST, type, "Custom");
 
-        mat = Material.WOOL; //yellow wool
-        type = "TEAM_TYPE";
-        placeSwitch(world, x0 + 5, y0 + 2, z0 + 2, mat, BlockFace.WEST, type, "ONE_V_ONE");
-        placeSwitch(world, x0 + 8, y0 + 2, z0 + 2, mat, BlockFace.WEST, type, "TWO_V_TWO");
-        placeSwitch(world, x0 + 11, y0 + 2, z0 + 2, mat, BlockFace.WEST, type, "THREE_FFA");
-        placeSwitch(world, x0 + 14, y0 + 2, z0 + 2, mat, BlockFace.WEST, type, "FOUR_FFA");
-        placeSwitch(world, x0 + 17, y0 + 2, z0 + 5, mat, BlockFace.NORTH, type, "THREE_V_THREE");
-        placeSwitch(world, x0 + 17, y0 + 2, z0 + 8, mat, BlockFace.NORTH, type, "MOSH_PIT");
-        placeSwitch(world, x0 + 17, y0 + 2, z0 + 11, mat, BlockFace.NORTH, type, "BIG_TEAM");
-        placeSwitch(world, x0 + 17, y0 + 2, z0 + 14, mat, BlockFace.NORTH, type, "SOLO");
+        dc = DyeColor.YELLOW; //yellow wool
+        type = "Team Type";
+        placeSwitch(world, x0 + 5, y0 + 2, z0 + 2, dc, BlockFace.WEST, type, "One V One");
+        placeSwitch(world, x0 + 8, y0 + 2, z0 + 2, dc, BlockFace.WEST, type, "Two V Two");
+        placeSwitch(world, x0 + 11, y0 + 2, z0 + 2, dc, BlockFace.WEST, type, "Three FFA");
+        placeSwitch(world, x0 + 14, y0 + 2, z0 + 2, dc, BlockFace.WEST, type, "Four FFA");
+        placeSwitch(world, x0 + 17, y0 + 2, z0 + 5, dc, BlockFace.NORTH, type, "Three V Three");
+        placeSwitch(world, x0 + 17, y0 + 2, z0 + 8, dc, BlockFace.NORTH, type, "Mosh Pit");
+        placeSwitch(world, x0 + 17, y0 + 2, z0 + 11, dc, BlockFace.NORTH, type, "Big Team");
+        placeSwitch(world, x0 + 17, y0 + 2, z0 + 14, dc, BlockFace.NORTH, type, "Solo");
 
         try {
 
@@ -195,38 +202,34 @@ public class LobbyArenaBuilder extends Arena {
         return null;
     }
 
-    public void placeSwitch(World world, int x, int y, int z, Material mat, BlockFace bf, String type, String name){
-    	byte bfByte = 0;
+    public void placeSwitch(World world, int x, int y, int z, DyeColor dc, BlockFace bf, String type, String name){
+    	byte bfLever = 0;
+    	byte bfSign = 0;
     	if(bf == BlockFace.EAST){ //north
-    	    bfByte = 0x4;
+    	    bfLever = 0x4;
+    	    bfSign = 0x2;
     	} else if(bf == BlockFace.WEST){ //south
-    	    bfByte = 0x3;
+    	    bfLever = 0x3;
+    	    bfSign = 0x3;
     	} else if(bf == BlockFace.SOUTH){ //east
-    	    bfByte = 0x1;
+    	    bfLever = 0x1;
+    	    bfSign = 0x5;
     	} else if(bf == BlockFace.NORTH){ //west
-    	    bfByte = 0x2;
+    	    bfLever = 0x2;
+    	    bfSign = 0x4;
     	}
-        world.getBlockAt(x, y, z).setType(mat);
-        world.getBlockAt(x, y, z).getRelative(BlockFace.UP).setType(mat);
+        world.getBlockAt(x, y, z).setType(Material.WOOL);
+        world.getBlockAt(x, y, z).setData(new Wool(dc).getData());
+        world.getBlockAt(x, y, z).getRelative(BlockFace.UP).setType(Material.WOOL);
+        world.getBlockAt(x, y, z).getRelative(BlockFace.UP).setData(new Wool(dc).getData());
         Lever lever = new Lever(Material.LEVER);
         lever.setFacingDirection(bf);
-        lever.setData(bfByte);
         world.getBlockAt(x, y, z).getRelative(bf).setType(lever.getItemType());
-        world.getBlockAt(x, y, z).getRelative(bf).setData(lever.getData());
-        if(bf == BlockFace.EAST){ //north
-            bfByte = 0x2;
-        } else if(bf == BlockFace.WEST){ //south
-            bfByte = 0x3;
-        } else if(bf == BlockFace.SOUTH){ //east
-            bfByte = 0x5;
-        } else if(bf == BlockFace.NORTH){ //west
-            bfByte = 0x4;
-        }
+        world.getBlockAt(x, y, z).getRelative(bf).setData(bfLever);
         org.bukkit.material.Sign mSign = new org.bukkit.material.Sign();
         mSign.setFacingDirection(bf);
-        mSign.setData(bfByte);
         world.getBlockAt(x, y, z).getRelative(BlockFace.UP).getRelative(bf).setType(Material.WALL_SIGN);
-        world.getBlockAt(x, y, z).getRelative(BlockFace.UP).getRelative(bf).setData(bfByte);
+        world.getBlockAt(x, y, z).getRelative(BlockFace.UP).getRelative(bf).setData(bfSign);
         Sign sign = (Sign)world.getBlockAt(x, y, z).getRelative(BlockFace.UP).getRelative(bf).getState();
         sign.setLine(0, type);
         sign.setLine(1, name);
