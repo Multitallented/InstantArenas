@@ -2,6 +2,7 @@ package redcastlemedia.multitallented.bukkit.heromatchmaking.listener;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -94,11 +95,13 @@ public class HMMListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event){
         if (event.getClickedBlock() == null ||
                 !event.getClickedBlock().getType().equals(Material.LEVER) ||
-                !event.getClickedBlock().getRelative(0, 1, 0).getType().equals(Material.SIGN)){
+                !event.getClickedBlock().getRelative(BlockFace.UP).getType().equals(Material.WALL_SIGN)){
             return;
         }
-        Sign sign = (Sign) event.getClickedBlock().getRelative(0, 1, 0).getState();
-        String type = sign.getLine(1);
+        Sign sign = (Sign) event.getClickedBlock().getRelative(BlockFace.UP).getState();
+        String type = sign.getLine(1).toUpperCase().replace(" ", "_");
+        sign.setLine(2, sign.getLine(2).equals("[OFF]") ? "[ON]" : "[OFF]");
+        sign.update(true);
         new PreferenceOrder(controller, event.getPlayer(), type);
     }
 }
