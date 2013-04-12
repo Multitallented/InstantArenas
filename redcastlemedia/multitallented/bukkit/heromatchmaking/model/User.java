@@ -66,7 +66,7 @@ public class User {
     }
     
     public Location getPreviousLocation() {
-        if (previousLocation == null) {
+        if (previousLocation == null || previousLocation.equals("")) {
             return null;
         }
         String[] locations = previousLocation.split(";");

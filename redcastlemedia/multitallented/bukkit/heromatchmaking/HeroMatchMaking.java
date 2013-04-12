@@ -53,6 +53,10 @@ public class HeroMatchMaking extends JavaPlugin {
                     allArgs += " " + s;
                 }
             }
+            if (args.length == 0) {
+                //TODO write help commands here
+                return true;
+            }
             if (args[0].equalsIgnoreCase("q") || args[0].equalsIgnoreCase("queue")) {
                 new QueueOrder(this, sender);
             } else {

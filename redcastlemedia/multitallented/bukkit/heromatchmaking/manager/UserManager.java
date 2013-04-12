@@ -39,15 +39,51 @@ public class UserManager {
      * @param state the name event that caused this method to trigger
      */
     public void restorePreviousUserState(final User u) {
+        final UserManager um = this;
         if (u.getPreviousLocation() == null) {
             return;
+        }
+        final Player p = u.getPlayer();
+        if (u.getPreviousStamina() > -1) {
+            p.setFoodLevel(u.getPreviousStamina());
+        }
+        if (HeroMatchMaking.heroes != null) {
+            Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
+            if (u.getPreviousHP() > 0) {
+                h.setHealth(u.getPreviousHP());
+            } else {
+                h.setHealth(h.getMaxHealth());
+            }
+            h.syncHealth();
+            u.setPreviousHP(0);
+            if (u.getPreviousMana() > 0) {
+                h.setMana(u.getPreviousMana());
+            }
+            u.setPreviousMana(0);
+            if (u.getPreviousClass() != null) {
+                h.setHeroClass(u.getPreviousClass(), false);
+            }
+            u.setPreviousClass(null);
+            if (u.getPreviousProf() != null) {
+                h.setHeroClass(u.getPreviousProf(), true);
+            }
+            u.setPreviousProf(null);
+        } else {
+            if (u.getPreviousHP() > 0) {
+                p.setHealth(u.getPreviousHP());
+            } else {
+                p.setHealth(20);
+            }
+            u.setPreviousHP(0);
+            if (u.getPreviousExp() > 0) {
+                p.setExp(u.getPreviousExp());
+            }
+            u.setPreviousExp(0f);
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(controller, new Runnable() {
             
             @Override
             public void run() {
-                Logger logger = Logger.getLogger("Minecraft");
-                Player p = u.getPlayer();
                 p.setFireTicks(1);
                 if (u.getPreviousLocation() != null) {
                     Location prevLocation = u.getPreviousLocation();
@@ -70,44 +106,78 @@ public class UserManager {
                         }
                     }
                 }
-                if (u.getPreviousStamina() > -1) {
-                    p.setFoodLevel(u.getPreviousStamina());
-                }
-                if (HeroMatchMaking.heroes != null) {
-                    Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
-                    if (u.getPreviousHP() > 0) {
-                        h.setHealth(u.getPreviousHP());
-                    } else {
-                        h.setHealth(h.getMaxHealth());
-                    }
-                    h.syncHealth();
-                    u.setPreviousHP(0);
-                    if (u.getPreviousMana() > 0) {
-                        h.setMana(u.getPreviousMana());
-                    }
-                    u.setPreviousMana(0);
-                    if (u.getPreviousClass() != null) {
-                        h.setHeroClass(u.getPreviousClass(), false);
-                    }
-                    u.setPreviousClass(null);
-                    if (u.getPreviousProf() != null) {
-                        h.setHeroClass(u.getPreviousProf(), true);
-                    }
-                    u.setPreviousProf(null);
-                } else {
-                    if (u.getPreviousHP() > 0) {
-                        p.setHealth(u.getPreviousHP());
-                    } else {
-                        p.setHealth(20);
-                    }
-                    u.setPreviousHP(0);
-                    if (u.getPreviousExp() > 0) {
-                        p.setExp(u.getPreviousExp());
-                    }
-                    u.setPreviousExp(0f);
-                }
+                um.saveUserData(u.getName());
             }
         });
+        
+    }
+    
+    public void restoreLoggingOutUser(final User u) {
+        final UserManager um = this;
+        if (u.getPreviousLocation() == null) {
+            return;
+        }
+        Player p = u.getPlayer();
+        p.setFireTicks(1);
+        if (u.getPreviousLocation() != null) {
+            Location prevLocation = u.getPreviousLocation();
+            if (!prevLocation.getChunk().isLoaded()) {
+                prevLocation.getChunk().load(true);
+            }
+            p.teleport(prevLocation);
+            u.setPreviousLocation(null);
+        }
+        ArrayList<ItemStack> inventory = u.getPreviousInventory();
+        if (inventory != null && inventory.size() > 3) {
+            p.getInventory().clear();
+            p.getInventory().setHelmet(inventory.get(0));
+            p.getInventory().setChestplate(inventory.get(1));
+            p.getInventory().setLeggings(inventory.get(2));
+            p.getInventory().setBoots(inventory.get(3));
+            for (int i = 4; i<inventory.size(); i++) {
+                if (inventory.get(i) != null) {
+                    p.getInventory().addItem(inventory.get(i));
+                }
+            }
+        }
+        if (u.getPreviousStamina() > -1) {
+            p.setFoodLevel(u.getPreviousStamina());
+        }
+        if (HeroMatchMaking.heroes != null) {
+            Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
+            if (u.getPreviousHP() > 0) {
+                h.setHealth(u.getPreviousHP());
+            } else {
+                h.setHealth(h.getMaxHealth());
+            }
+            h.syncHealth();
+            u.setPreviousHP(0);
+            if (u.getPreviousMana() > 0) {
+                h.setMana(u.getPreviousMana());
+            }
+            u.setPreviousMana(0);
+            if (u.getPreviousClass() != null) {
+                h.setHeroClass(u.getPreviousClass(), false);
+            }
+            u.setPreviousClass(null);
+            if (u.getPreviousProf() != null) {
+                h.setHeroClass(u.getPreviousProf(), true);
+            }
+            u.setPreviousProf(null);
+        } else {
+            if (u.getPreviousHP() > 0) {
+                p.setHealth(u.getPreviousHP());
+            } else {
+                p.setHealth(20);
+            }
+            u.setPreviousHP(0);
+            if (u.getPreviousExp() > 0) {
+                p.setExp(u.getPreviousExp());
+            }
+            u.setPreviousExp(0f);
+        }
+
+        um.saveUserData(u.getName());
         
     }
     
@@ -136,6 +206,8 @@ public class UserManager {
 
         saveUserData(p.getName());
     }
+    
+    
     
     public void loadUserData(String name) {
         File dataFolder = new File(controller.getDataFolder(), "data");
@@ -211,7 +283,9 @@ public class UserManager {
                 u = users.get(name);
             } else {
                 List<GameType> gTypes = new ArrayList<>();
+                gTypes.add(GameType.RTS);
                 List<TeamType> tTypes = new ArrayList<>();
+                tTypes.add(TeamType.ONE_V_ONE);
                 u = new User(name, 0, 0, gTypes, tTypes, Bukkit.getPlayer(name));
             }
 
@@ -221,6 +295,8 @@ public class UserManager {
             config.set("team-types", u.getStringTType());
             if (u.getPreviousLocation() != null) {
                 config.set("previous-location", u.getRawPreviousLocation());
+            } else {
+                config.set("previous-location", "");
             }
 
             config.save(userFile);

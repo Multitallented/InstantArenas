@@ -11,8 +11,8 @@ import redcastlemedia.multitallented.bukkit.heromatchmaking.model.User;
 public class QuitOrder {
     public QuitOrder(HeroMatchMaking controller, Player player) {
         UserManager um = controller.getUserManager();
-        um.saveUserData(player.getName());
         User u = um.getUser(player.getName());
+        um.restoreLoggingOutUser(u);
         um.removeUser(u);
         if (u == null || u.getMatch() == null) {
             controller.getMatchManager().removeQueuingPlayer(player);
