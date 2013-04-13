@@ -100,8 +100,7 @@ public class ArenaManager {
             p.setFoodLevel(20);
             if (HeroMatchMaking.heroes != null) {
                 Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
-                h.setHealth(h.getMaxHealth());
-                h.syncHealth();
+                p.setHealth(p.getMaxHealth());
                 h.setMana(h.getMaxMana());
                 if (arena.getHeroClass() != null) {
                     h.setHeroClass(arena.getHeroClass(), false);

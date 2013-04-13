@@ -56,12 +56,10 @@ public class PitfallArenaBuilder extends Arena implements Listener {
         }
         p.getInventory().removeItem(iss);
         p.updateInventory();
-        if (HeroMatchMaking.heroes == null) {
+        if (p.getHealth() + hp < p.getMaxHealth()) {
             p.setHealth(p.getHealth() + hp);
         } else {
-            Hero hero = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
-            hero.setHealth(hp + hero.getHealth());
-            hero.syncHealth();
+            p.setHealth(p.getMaxHealth());
         }
     }
     

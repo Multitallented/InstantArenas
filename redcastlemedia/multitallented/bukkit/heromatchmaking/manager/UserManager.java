@@ -50,11 +50,11 @@ public class UserManager {
         if (HeroMatchMaking.heroes != null) {
             Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
             if (u.getPreviousHP() > 0) {
-                h.setHealth(u.getPreviousHP());
+                p.setHealth(u.getPreviousHP());
             } else {
-                h.setHealth(h.getMaxHealth());
+                p.setHealth(p.getMaxHealth());
             }
-            h.syncHealth();
+            
             u.setPreviousHP(0);
             if (u.getPreviousMana() > 0) {
                 h.setMana(u.getPreviousMana());
@@ -146,11 +146,10 @@ public class UserManager {
         if (HeroMatchMaking.heroes != null) {
             Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
             if (u.getPreviousHP() > 0) {
-                h.setHealth(u.getPreviousHP());
+                p.setHealth(u.getPreviousHP());
             } else {
-                h.setHealth(h.getMaxHealth());
+                p.setHealth(p.getMaxHealth());
             }
-            h.syncHealth();
             u.setPreviousHP(0);
             if (u.getPreviousMana() > 0) {
                 h.setMana(u.getPreviousMana());
@@ -195,7 +194,7 @@ public class UserManager {
         u.setPreviousStamina(p.getFoodLevel());
         if (HeroMatchMaking.heroes != null) {
             Hero h = HeroMatchMaking.heroes.getCharacterManager().getHero(p);
-            u.setPreviousHP(h.getHealth());
+            u.setPreviousHP(p.getHealth());
             u.setPreviousMana(h.getMana());
             u.setPreviousClass(h.getHeroClass());
             u.setPreviousProf(h.getSecondClass());
