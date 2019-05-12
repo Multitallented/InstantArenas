@@ -1,17 +1,17 @@
 author: Multitallented
 database: false
-description: puts players in a queue for pvp games against other players of the same skill level
-main: redcastlemedia.multitallented.bukkit.heromatchmaking.HeroMatchMaking
-name: HeroMatchMaking
-startup: postworld
-url: http://dev.bukkit.org/server-mods/heromatchmaking/
-version: '0.1'
+description: Puts players in a queue for pvp games against other players of the same skill level
+main: org.redcastlemedia.multitallented.instantarenas.InstantArenas
+name: InstantArenas
+load: POSTWORLD
+version: 1.0-SNAPSHOT
+api-version: 1.14
 commands:
-  hmm:
-    aliases: ['heromatchmaking']
-    description: HeroMatchMaking commands
+  ia:
+    aliases: ['instantarenas']
+    description: InstantArenas commands
     usage: /<command>
 permissions:
   heromatchmaking.queue:
-    description: Lets you use /hmm queue
+    description: Lets you use /ia queue
     default: true
