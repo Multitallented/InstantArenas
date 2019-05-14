@@ -99,7 +99,7 @@ public class MatchManager {
         for (User u : m.getRawPlayers()) {
             u.setWins(u.getWins() + 1);
             if (InstantArenas.econ != null) {
-                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(u.getPlayer().getUniqueId());
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(u.getUuid());
                 InstantArenas.econ.depositPlayer(offlinePlayer, ConfigManager.getInstance().getWinnings());
             }
             u.setMatch(null);
@@ -120,7 +120,7 @@ public class MatchManager {
         }
 
         for (Player p : queuingPlayers) {
-            User u = UserManager.getInstance().getUser(p.getName());
+            User u = UserManager.getInstance().getUser(p.getUniqueId());
             for (GameType gType : u.getGType()) {
                 if (user.getGType().contains(gType)) {
                     for (TeamType tType : u.getTType()) {

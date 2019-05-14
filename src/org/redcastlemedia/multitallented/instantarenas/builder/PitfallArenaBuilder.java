@@ -49,7 +49,7 @@ public class PitfallArenaBuilder extends Arena implements Listener {
             default:
                 return;
         }
-        User u = UserManager.getInstance().getUser(p.getName());
+        User u = UserManager.getInstance().getUser(p.getUniqueId());
         if (u.getMatch() == null || !(u.getMatch().getArena() instanceof PitfallArenaBuilder)) {
             return;
         }

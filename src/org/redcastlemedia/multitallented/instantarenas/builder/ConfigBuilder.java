@@ -12,6 +12,10 @@ import org.redcastlemedia.multitallented.instantarenas.InstantArenas;
  */
 public class ConfigBuilder {
     public static FileConfiguration createNewConfigFile(File file) {
+        File dataFolder = InstantArenas.getInstance().getDataFolder();
+        if (!dataFolder.exists()) {
+            dataFolder.mkdir();
+        }
         try {
             file.createNewFile();
         } catch (IOException ioe) {

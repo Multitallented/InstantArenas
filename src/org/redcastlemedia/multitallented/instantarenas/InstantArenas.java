@@ -43,7 +43,7 @@ public class InstantArenas extends JavaPlugin {
     }
     @Override
     public void onDisable() {
-        new DisableOrder(this);
+        new DisableOrder();
     }
     
     @Override
